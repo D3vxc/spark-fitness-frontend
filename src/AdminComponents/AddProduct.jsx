@@ -5,6 +5,7 @@ import { z } from "zod";
 import axios from "axios";
 import { Box, TextField, Button, Typography, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getToken } from "../utils/token";
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required."),
@@ -71,10 +72,19 @@ function AddProduct() {
 
     // Submit product data to the server
     try {
-      const response = await axios.post("/products/newproducts", {
-        ...formDataValues,
-        image: imageUrl,
-      });
+      alert(getToken());
+      const response = await axios.post(
+        "/products/newproducts",
+        {
+          ...formDataValues,
+          image: imageUrl,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
 
       console.log("Server response:", response.data);
       reset(); // Reset form fields after successful submission

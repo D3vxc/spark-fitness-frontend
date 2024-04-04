@@ -2,6 +2,8 @@ import React from "react";
 import MainBanner from "../components/MainBanner";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { useFetchAllProduct } from "../Hooks/getAllproduct";
+import "./AddToCartButton.css"; // Adjust the path as per your file structure
+import { useNavigate } from "react-router-dom";
 
 function Products() {
   const {
@@ -10,7 +12,8 @@ function Products() {
     refetch: refetchProduct,
   } = useFetchAllProduct();
 
-  console.log("getAllProduct", getAllProduct);
+  const navigate = useNavigate();
+  const [product, setProduct] = React.useState([]);
 
   return (
     <React.Fragment>
@@ -107,84 +110,118 @@ function Products() {
         <Box
           sx={{
             display: "flex",
-            // pb: "200px",
             width: "79%",
             flexWrap: "wrap",
             mx: "auto",
           }}
         >
-          {getAllProduct?.map((x, i) => {
-            return (
-              <Paper
-                key={i}
-                elevation={0}
-                container
+          {getAllProduct?.map((x, i) => (
+            <Paper
+              onClick={() => {
+                setProduct(x?._id);
+                navigate(`/productView/${x?._id}`);
+                // console.log(x, "product data here", x?._id);
+              }}
+              key={i}
+              elevation={0}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                width: "250px",
+                height: "550px",
+                background: "transparent",
+                margin: "20px",
+                gap: "10px",
+                cursor: "pointer",
+                position: "relative",
+                "&:hover .addToCartButton": {
+                  visibility: "visible",
+                },
+                "& .productImage": {
+                  // Assign a class for targeting
+                  width: "100%",
+                  height: "auto",
+                  mx: "auto",
+                  transition: "height 0.3s ease-out", // Ensure smooth transition for both hover on and off
+                },
+                "&:hover .productImage": {
+                  height: "calc(100% - 150px)", // Shrink the height of the image by 50px only on hover
+                },
+                "&:hover .productDescription": {
+                  maxHeight: "100px", // Allow for one more line of text in description
+                },
+              }}
+            >
+              <Box
+                component='img'
+                className='productImage' // Use this class for the transition effect
+                src={x?.image}
+              />
+
+              <Box
+                className='addToCartButton'
                 sx={{
+                  width: "100px",
+                  height: "50px",
+                  position: "absolute",
+                  left: "0",
+                  background: "#fff",
+                  top: "2%",
+                  visibility: "hidden",
                   display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
-                  width: "250px",
-                  height: "550px",
-                  background: "transparent",
-                  margin: "20px",
-                  gap: "10px",
-                  cursor: "pointer",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "visibility 0.2s",
                 }}
               >
-                <Box
-                  component='img'
-                  src={x?.image}
-                  sx={{
-                    width: "100%",
-                    height: "auto",
-                    mx: "auto",
-                  }}
-                />
+                Add To Cart
+              </Box>
 
-                <Typography
-                  sx={{
-                    width: "100%",
-                    textAlign: "left",
-                    maxHeight: "40px",
-                    overflow: "hidden",
-                    fontFamily: "poppins",
-                    color: "#000",
-                    fontSize: "16px",
-                    fontWeight: 400,
-                    lineHeight: "20px",
-                  }}
-                >
-                  {x?.description}
-                </Typography>
-                <Typography
-                  sx={{
-                    width: "100%",
-                    textAlign: "left",
-                    fontFamily: "poppins",
-                    color: "#000",
-                    minHeight: "50px",
-                    fontSize: "20px",
-                    fontWeight: 500,
-                    lineHeight: "25px",
-                  }}
-                >
-                  {x?.name}
-                </Typography>
-                <Typography
-                  sx={{
-                    width: "100%",
-                    textAlign: "left",
-                    color: "#000",
-                    fontSize: "20px",
-                    fontWeight: 500,
-                    lineHeight: "22px",
-                  }}
-                >
-                  ₹{x?.price}
-                </Typography>
-              </Paper>
-            );
-          })}
+              <Typography
+                className='productDescription'
+                sx={{
+                  textAlign: "left",
+                  maxHeight: "40px",
+                  overflow: "hidden",
+                  fontFamily: "poppins",
+                  color: "#000",
+                  fontSize: "16px",
+                  fontWeight: 400,
+                  lineHeight: "20px",
+                  transition: "max-height 0.3s ease-in-out",
+                }}
+              >
+                {x?.description}
+              </Typography>
+
+              <Typography
+                sx={{
+                  textAlign: "left",
+                  fontFamily: "poppins",
+                  color: "#000",
+                  minHeight: "50px",
+                  fontSize: "20px",
+                  fontWeight: 500,
+                  lineHeight: "25px",
+                }}
+              >
+                {x?.name}
+              </Typography>
+
+              <Typography
+                sx={{
+                  textAlign: "left",
+                  color: "#000",
+                  fontSize: "20px",
+                  fontWeight: 500,
+                  lineHeight: "22px",
+                }}
+              >
+                ₹{x?.price}
+              </Typography>
+            </Paper>
+          ))}
         </Box>
       </Box>
     </React.Fragment>
