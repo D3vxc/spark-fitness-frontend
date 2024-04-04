@@ -9,6 +9,7 @@ import { getToken } from "../utils/token";
 
 function Header() {
   const navigate = useNavigate();
+  const token = getToken();
 
   const [openProfile, setOpenProfile] = useState(false);
 
@@ -173,11 +174,12 @@ function Header() {
               justifyContent: "center",
               alignItems: "center",
               alignContent: "center",
-              cursor: "pointer",
             }}
-            onClick={handleProfileOpen}
           >
-            <AccountCircleIcon sx={{ fontSize: 40 }} />
+            <AccountCircleIcon
+              sx={{ fontSize: 40, cursor: "pointer" }}
+              onClick={handleProfileOpen}
+            />
           </Grid>
         )}
       </Grid>
@@ -197,7 +199,7 @@ function Header() {
             outline: "none",
           }}
         >
-          {getToken() === null ? (
+          {token?.user === null ? (
             <Grid
               item
               xs={2}
