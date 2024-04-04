@@ -2,7 +2,8 @@ import { Box, Button, Grid, Typography, Modal } from "@mui/material";
 import React, { useState } from "react";
 import LogoImage from "../assets/HomePageImages/Logo.svg";
 import { useNavigate } from "react-router-dom";
-import { FetchUser } from "./Hooks/GetCurrentUserData.js";
+import { hover } from "@testing-library/user-event/dist/hover";
+import { FetchUser } from "./Hooks/GetCurrentUserData";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { getToken } from "../utils/token";
 

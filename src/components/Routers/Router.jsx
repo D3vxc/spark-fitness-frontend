@@ -14,7 +14,6 @@ import Classes from "../Pages/Classes.jsx";
 import Products from "../Pages/Products.jsx";
 // import { getToken } from "../../utils/token.js";
 import AddProduct from "../../AdminComponents/AddProduct.jsx";
-import ProtectedRoute from "./ProtectedRoute.jsx"; // Adjust the import path as necessary
 import AdminDashboard from "../../AdminComponents/AdminDashboard.jsx";
 import UsersComponent from "../../AdminComponents/UsersComponent.jsx";
 import ProductsComponent from "../../AdminComponents/ProductsComponent.jsx";
@@ -94,9 +93,6 @@ const MainRouter = () => (
           </HeaderFooterLayout>
         }
       />
-      {/* <Route element={<ProtectedRoute />}> */}
-      {/* Now AddProduct is a child route of ProtectedRoute */}
-      {/* </Route> */}
       <Route path='/forgot-password' element={<ForgotPassword />} />
       <Route path='/otp-confirmation' element={<OtpConfirmation />} />
       <Route

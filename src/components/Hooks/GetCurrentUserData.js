@@ -1,4 +1,3 @@
-
 import { useQuery } from "react-query";
 import axios from "axios";
 import token, { getToken } from "../../utils/token.js";
@@ -9,7 +8,7 @@ export const FetchUser = () => {
     try {
       const response = await axios.get("user/get-self", {
         headers: {
-         Authorization: ` Bearer ${getToken()}`,
+          Authorization: `Bearer ${getToken()}`,
         },
       });
       console.log("response.data", response.data);

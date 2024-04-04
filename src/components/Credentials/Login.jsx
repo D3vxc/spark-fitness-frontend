@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import token, { getToken } from "../../utils/token.js";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -19,8 +20,10 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import logo from "../../assets/HomePageImages/Logo.svg";
+import Cookies from "js-cookie";
 
 export default function SignIn() {
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState(false);
@@ -40,9 +43,29 @@ export default function SignIn() {
 
     if (email && password) {
       try {
-        const response = await axios.post("/user/login", { email, password });
-        toast.success("Login successful!");
+        // Post login credentials to your server
+        const response = await axios.post(
+          "/user/login",
+          {
+            email,
+            password,
+            token,
+          }
+          // {
+          //   headers: {
+          //     Authorization: `Bearer ${getToken()}`,
+          //   },
+          // }
+        );
+        console.log(response.data, "response here");
+        // If login is successful, store the received token
+        Cookies.set("token", response.data.token);
+
+        toast.success("LoggedIn successful!");
+
         setIsLoading(false);
+
+        // Navigate to the homepage or dashboard as per your app's flow
         navigate("/");
       } catch (error) {
         toast.error("Login failed. Please check your credentials.");
@@ -121,10 +144,6 @@ export default function SignIn() {
               autoComplete='current-password'
               error={passwordError}
               helperText={passwordError ? "Password is required" : ""}
-            />
-            <FormControlLabel
-              control={<Checkbox value='remember' color='primary' />}
-              label='Remember me'
             />
             <Button
               type='submit'
