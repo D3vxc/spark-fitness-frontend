@@ -24,9 +24,12 @@ function ClassesComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [nameError, setNameError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
+  const [descriptionError, setdescriptionError] = useState(false);
+  const [trainerError, settrainerError] = useState(false);
+  const [durationError, setdurationError] = useState(false);
+  const [imageError, setimageError] = useState(false);
+  const [dateError,setdateError] = useState(false);
+  const [timeError,settimeError] = useState(false);
 
   const handleAddUserOpen = () => {
     setOpenAddUserDialog(true);
@@ -37,9 +40,12 @@ function ClassesComponent() {
   };
 
   const [firstName,setFirstName] = useState("");
-const [phone,setPhone] = useState("");
-const [email,setEmail] = useState("");
-const [password,setPassword] = useState("");
+  const [description, setdescription] = useState("");
+  const [trainer, settrainer] = useState("");
+  const [duration, setduration] = useState("");
+  const [image, setimage] = useState("");
+  const [date,setdate] = useState("");
+  const [time,settime] = useState("");
 
 
   const handleSubmit = async () => {
@@ -54,12 +60,12 @@ const [password,setPassword] = useState("");
 
     // Basic validation
     setNameError(!firstName);
-    setdescription(!description);
-    setduration(!duration);
-    settrainer(!trainer);
-    setimage(!image);
-    setdate(!date);
-    settime(!time);
+    setdescriptionError(!description);
+    setdurationError(!duration);
+    settrainerError(!trainer);
+    setimageError(!image);
+    setdateError(!date);
+    settimeError(!time);
 
     if (firstName && description && duration && trainer && image && date && time) {
       try {
