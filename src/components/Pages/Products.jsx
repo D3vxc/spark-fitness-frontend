@@ -204,6 +204,7 @@ function Products() {
                 onClick={(e) => {
                   e.stopPropagation(); // Prevent triggering the click on the Paper
                   AddProductToCart(x?._id, selectedQuantities[x?._id] || 1);
+                  setSelectedQuantities(1);
                 }}
                 sx={{
                   width: "25px",

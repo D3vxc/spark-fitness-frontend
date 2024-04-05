@@ -220,9 +220,23 @@ function Header() {
             </Grid>
           ) : (
             <Box>
-              <Typography id='modal-modal-title' variant='h4' component='h2'>
-                Hello {LoggedInUser?.user?.name || "N/A"}!!
-              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  alignContent: "center",
+                  gap: "5px",
+                }}
+              >
+                <AccountCircleIcon
+                  sx={{ fontSize: 30, cursor: "pointer" }}
+                  onClick={handleProfileOpen}
+                />{" "}
+                <Typography id='modal-modal-title' variant='h5' component='h2'>
+                  Hello {LoggedInUser?.user?.name || "N/A"}!!
+                </Typography>
+              </Box>
               <Typography id='modal-modal-description' sx={{ mt: 2 }}>
                 Email: {LoggedInUser?.user?.email || "N/A"}
               </Typography>

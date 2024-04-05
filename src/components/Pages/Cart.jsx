@@ -1,6 +1,6 @@
 import React from "react";
 import MainBanner from "../components/MainBanner";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useFetchCart } from "../Hooks/getCartData";
 
 function Cart() {
@@ -31,13 +31,21 @@ function Cart() {
           imageHeight={"55vh"}
           paddingbottom={""} // only giving it to this page due there will be images on the background
         />
-        <Box
+        <Grid
+          container
           sx={{
             height: "100vh",
           }}
         >
-          {}
-        </Box>
+          {cartData?.productData?.map((x, i) => {
+            return (
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} key={i}>
+                <Box>{x.product}</Box>
+                <Box>{x.quantity}</Box>
+              </Grid>
+            );
+          })}
+        </Grid>
       </Box>
     </React.Fragment>
   );
