@@ -57,7 +57,7 @@ export default function SignIn() {
           //   },
           // }
         );
-        console.log(response.data, "response here");
+        // console.log(response.data, "response here");
         // If login is successful, store the received token
         Cookies.set("token", response.data.token);
 

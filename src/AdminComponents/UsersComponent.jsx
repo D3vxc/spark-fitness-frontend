@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Grid,
@@ -9,7 +9,7 @@ import {
   DialogTitle,
   Button,
   Modal,
-  TextField
+  TextField,
 } from "@mui/material";
 // import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -59,15 +59,13 @@ function UsersComponent() {
     setOpenDialog(false);
     refetchUsers();
   };
-  
-  const [firstName,setFirstName] = useState("");
-const [phone,setPhone] = useState("");
-const [email,setEmail] = useState("");
-const [password,setPassword] = useState("");
 
+  const [firstName, setFirstName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
-    
     setIsLoading(true);
     // const data = new FormData(event.currentTarget);
 
@@ -86,7 +84,7 @@ const [password,setPassword] = useState("");
       try {
         // Adjust URL to your API endpoint for registration
         const response = await axios.post("/user/register", {
-          name : firstName,
+          name: firstName,
           phone,
           email,
           password,
@@ -96,7 +94,7 @@ const [password,setPassword] = useState("");
         // Show success message and navigate or take other actions
         toast.success("User add successful!");
         setIsLoading(false);
-
+        refetchUsers();
         // Navigate to login page or dashboard as per your flow
         // navigate("/login");
       } catch (error) {
@@ -113,13 +111,13 @@ const [password,setPassword] = useState("");
   //   event.preventDefault();
   //   setIsLoading(true);
   //   const data = new FormData(event.currentTarget);
-  
+
   //   // Extracting form data
   //   const name = data.get("name");
   //   const phone = data.get("phone");
   //   const email = data.get("email");
   //   const password = data.get("password");
-  
+
   //   // Proceed only if all fields are filled (simple validation)
   //   if (name && phone && email && password) {
   //     try {
@@ -147,107 +145,109 @@ const [password,setPassword] = useState("");
   return (
     <React.Fragment>
       <Box sx={{ flexGrow: 1, p: 6, bgcolor: "#FBFFFE", height: "100vh" }}>
-        <Box sx={{
-          width :"100%",
-          display : "flex",
-          justifyContent : "space-between",       
-        }}>
-          <Typography variant="h4" component="div">
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography variant='h4' component='div'>
             User Management
           </Typography>
           <PersonAddIcon onClick={handleAddUserOpen} />
         </Box>
-        <Modal open={openAddUserDialog} onClose={handleAddUserClose} sx={{
-           position: 'absolute',
-           top: '50%',
-           left: '50%',
-           transform: 'translate(-50%, -50%)',
-           width: 400,
-           bgcolor: 'background.paper',
-           border: '2px solid #000',
-           boxShadow: 24,
-           p: 4,
-        }}
-        onSubmit={handleSubmit}
-
+        <Modal
+          open={openAddUserDialog}
+          onClose={handleAddUserClose}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+          onSubmit={handleSubmit}
         >
-           <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete='given-name'
-                  name='name'
-                  required
-                  fullWidth
-                  id='name'
-                  label='Name'
-                  value={firstName}
-                  onChange={(e)=>setFirstName(e.target.value)}
-
-                  autoFocus
-                  error={nameError}
-                  helperText={nameError ? "First name is required" : ""}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete='phone'
-                  name='phone'
-                  required
-                  fullWidth
-                  id='phone'
-                  label='Phone Number'
-                  value={phone}
-onChange={(e)=>setPhone(e.target.value)}
-                  autoFocus
-                  error={phoneError}
-                  helperText={phoneError ? "First name is required" : ""}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id='email'
-                  label='Email Address'
-                  name='email'
-                  autoComplete='email'
-                  value={email}
-onChange={(e)=>setEmail(e.target.value)}
-
-                  error={emailError}
-                  helperText={emailError ? "Email is required" : ""}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name='password'
-                  label='Password'
-                  type='password'
-                  id='password'
-                  value={password}
-onChange={(e)=>setPassword(e.target.value)}
-                  autoComplete='new-password'
-                  error={passwordError}
-                  helperText={passwordError ? "Password is required" : ""}
-                />
-              </Grid>
-              <Grid> <Button
-              type='submit'
-              onClick={handleSubmit}
-              fullWidth
-              variant='contained'
-              sx={{ mt: 3, mb: 2 }}
-              disabled={isLoading}
-            >
-              add user
-            </Button>
-
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                autoComplete='given-name'
+                name='name'
+                required
+                fullWidth
+                id='name'
+                label='Name'
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                autoFocus
+                error={nameError}
+                helperText={nameError ? "First name is required" : ""}
+              />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                autoComplete='phone'
+                name='phone'
+                required
+                fullWidth
+                id='phone'
+                label='Phone Number'
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                autoFocus
+                error={phoneError}
+                helperText={phoneError ? "First name is required" : ""}
+              />
             </Grid>
-           
+
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id='email'
+                label='Email Address'
+                name='email'
+                autoComplete='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                error={emailError}
+                helperText={emailError ? "Email is required" : ""}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name='password'
+                label='Password'
+                type='password'
+                id='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete='new-password'
+                error={passwordError}
+                helperText={passwordError ? "Password is required" : ""}
+              />
+            </Grid>
+            <Grid>
+              {" "}
+              <Button
+                type='submit'
+                onClick={handleSubmit}
+                fullWidth
+                variant='contained'
+                sx={{ mt: 3, mb: 2 }}
+                disabled={isLoading}
+              >
+                add user
+              </Button>
+            </Grid>
+          </Grid>
         </Modal>
         <Grid
           container

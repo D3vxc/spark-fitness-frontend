@@ -28,7 +28,7 @@ function Header() {
     refetch: LoggedInUserRefetch,
   } = FetchUser();
 
-  // console.log("LoggedInUser", LoggedInUser);
+  console.log("LoggedInUser", LoggedInUser);
 
   return (
     <React.Fragment>

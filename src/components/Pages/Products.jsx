@@ -8,6 +8,7 @@ import { useAddToCart } from "../Hooks/getCartData";
 import axios from "axios";
 import { getToken } from "../../utils/token";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { toast } from "react-toastify";
 
 function Products() {
   const {
@@ -222,7 +223,9 @@ function Products() {
                   },
                 }}
               >
-                <AddShoppingCartIcon sx={{ color: "#000", fontSize: "20px" }} />
+                <AddShoppingCartIcon
+                  sx={{ color: "#000", fontSize: "20px", width: "100px" }}
+                />
               </Button>
 
               <Typography

@@ -1,77 +1,69 @@
-import React , {useState} from "react";
-import { 
-  Typography, 
-  Box, 
-  Grid,
-  Button,
-  Modal,
-  TextField
- } from "@mui/material";
+import React, { useState } from "react";
+import { Typography, Box, Grid, Button, Modal, TextField } from "@mui/material";
 import { useFetchAllProduct } from "../components/Hooks/getAllproduct";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { useNavigate } from "react-router-dom";
 
 function ProductsComponent() {
+  const navigate = useNavigate();
   const {
     data: getAllProduct,
     isLoading: getProductLoading,
-    refetch: refetchUsers,
+    refetch: refetchProducts,
   } = useFetchAllProduct();
 
   console.log("getAllProduct", getAllProduct);
 
+  const [products, setProducts] = useState([]); // Mocked products state
   const [isLoading, setIsLoading] = useState(false);
-  const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
+  const [openAddProductDialog, setOpenAddProductDialog] = useState(false);
+
   const [nameError, setNameError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
+  const [stockError, setStockError] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  const handleAddUserOpen = () => {
-    setOpenAddUserDialog(true);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState();
+  const [image, setImage] = useState(null);
+  const [stock, setStock] = useState(1);
+  const handleAddProductOpen = () => {
+    setOpenAddProductDialog(true);
   };
 
-  const handleAddUserClose = () => {
-    setOpenAddUserDialog(false);
+  const handleAddProductClose = () => {
+    setOpenAddProductDialog(false);
   };
-
-  const [firstName,setFirstName] = useState("");
-const [phone,setPhone] = useState("");
-const [email,setEmail] = useState("");
-const [password,setPassword] = useState("");
-
 
   const handleSubmit = async () => {
-    
     setIsLoading(true);
 
-    setNameError(!firstName);
-    setPhoneError(!phone);
-    setEmailError(!email);
-    setPasswordError(!password);
+    setNameError(!name);
+    setDescriptionError(!description);
+    setPriceError(!price);
+    setStockError(!stock);
+    setImageError(!image);
 
-    if (firstName && phone && email && password) {
+    if (name && description && price && stock && image) {
       try {
-        // Adjust URL to your API endpoint for registration
-        const response = await axios.post("/products/addProduct", {
-          name : firstName,
-          phone,
-          email,
-          password,
+        const response = await axios.post("/products/addproduct", {
+          name,
+          description,
+          price,
+          stock,
+          image,
         });
 
-        handleAddUserClose();
-        // Show success message and navigate or take other actions
-        toast.success("User add successful!");
-        setIsLoading(false);
-
-        // Navigate to login page or dashboard as per your flow
-        // navigate("/login");
+        handleAddProductClose();
+        toast.success("Product added successfully");
+        refetchProducts();
       } catch (error) {
-        // Handle errors (e.g., email already in use)
-        toast.error("Add failed. Please try again.");
-        setIsLoading(false);
+        console.error("Error adding product:", error);
+        toast.error("Error adding product");
       }
     } else {
       setIsLoading(false);
@@ -85,108 +77,24 @@ const [password,setPassword] = useState("");
   return (
     <React.Fragment>
       <Box sx={{ flexGrow: 1, p: 6, bgcolor: "#FBFFFE", height: "100vh" }}>
-      <Box sx={{
-          width :"100%",
-          display : "flex",
-          justifyContent : "space-between",       
-        }}>
-        <Typography variant='h4' component='div'>
-          Products
-        </Typography>
-        <PersonAddIcon onClick={handleAddUserOpen} />
-        </Box>
-        <Modal open={openAddUserDialog} onClose={handleAddUserClose} sx={{
-           position: 'absolute',
-           top: '50%',
-           left: '50%',
-           transform: 'translate(-50%, -50%)',
-           width: 400,
-           bgcolor: 'background.paper',
-           border: '2px solid #000',
-           boxShadow: 24,
-           p: 4,
-        }}
-        onSubmit={handleSubmit}
-
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
         >
-           <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete='given-name'
-                  name='name'
-                  required
-                  fullWidth
-                  id='name'
-                  label='Name'
-                  value={firstName}
-                  onChange={(e)=>setFirstName(e.target.value)}
+          <Typography variant='h4' component='div'>
+            Products
+          </Typography>
+          <PersonAddIcon
+            sx={{
+              cursor: "pointer",
+            }}
+            onClick={() => navigate("/addProduct")}
+          />
+        </Box>
 
-                  autoFocus
-                  error={nameError}
-                  helperText={nameError ? "First name is required" : ""}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete='phone'
-                  name='phone'
-                  required
-                  fullWidth
-                  id='phone'
-                  label='Phone Number'
-                  value={phone}
-                  onChange={(e)=>setPhone(e.target.value)}
-                  autoFocus
-                  error={phoneError}
-                  helperText={phoneError ? "First name is required" : ""}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id='email'
-                  label='Email Address'
-                  name='email'
-                  autoComplete='email'
-                  value={email}
-                  onChange={(e)=>setEmail(e.target.value)}
-
-                  error={emailError}
-                  helperText={emailError ? "Email is required" : ""}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name='password'
-                  label='Password'
-                  type='password'
-                  id='password'
-                  value={password}
-                  onChange={(e)=>setPassword(e.target.value)}
-                  autoComplete='new-password'
-                  error={passwordError}
-                  helperText={passwordError ? "Password is required" : ""}
-                />
-              </Grid>
-              <Grid> <Button
-              type='submit'
-              onClick={handleSubmit}
-              fullWidth
-              variant='contained'
-              sx={{ mt: 3, mb: 2 }}
-              disabled={isLoading}
-            >
-              add user
-            </Button>
-
-            </Grid>
-            </Grid>
-           
-        </Modal>
         <Grid
           container
           sx={{
