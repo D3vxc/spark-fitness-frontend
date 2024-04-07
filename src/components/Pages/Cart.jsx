@@ -65,7 +65,7 @@ function Cart() {
             mx: "auto",
           }}
         >
-          <Grid
+          {/* <Grid
             item
             xs={12}
             sx={{
@@ -217,7 +217,74 @@ function Cart() {
                 </Grid>
               </Grid>
             ))}
+          </Grid> */}
+          <Grid
+            container
+            sx={{
+              mt: "20px",
+              display: "flex",
+              background: "#F0F0F0",
+              height: "70px",
+              borderRadius: "10px",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Grid item xs={1} textAlign='center'>
+              Select
+            </Grid>
+            <Grid item xs={2} textAlign='center'>
+              Image
+            </Grid>
+            <Grid item xs={3} textAlign='center'>
+              Name
+            </Grid>
+            <Grid item xs={3} textAlign='center'>
+              Description
+            </Grid>
+            <Grid item xs={1} textAlign='center'>
+              Quantity
+            </Grid>
+            <Grid item xs={2} textAlign='center'>
+              Price
+            </Grid>
           </Grid>
+
+          {/* Cart Items */}
+          {cartData?.productData?.map((item, index) => (
+            <Grid
+              container
+              alignItems='center'
+              key={index}
+              sx={{ borderBottom: "1px solid #ddd", p: 2 }}
+            >
+              <Grid item xs={1} textAlign='center'>
+                <Checkbox
+                  checked={selectedProducts.includes(item.product._id)}
+                  onChange={() => handleSelectProduct(item.product._id)}
+                />
+              </Grid>
+              <Grid item xs={2} textAlign='center'>
+                <img
+                  src={item.product.image}
+                  alt={item.product.name}
+                  style={{ width: "100px", height: "auto" }}
+                />
+              </Grid>
+              <Grid item xs={3} textAlign='center'>
+                {item.product.name}
+              </Grid>
+              <Grid item xs={3} textAlign='center'>
+                {item.product.description}
+              </Grid>
+              <Grid item xs={1} textAlign='center'>
+                {item.quantity}
+              </Grid>
+              <Grid item xs={2} textAlign='center'>
+                ₹{item.product.price}
+              </Grid>
+            </Grid>
+          ))}
 
           {selectedProducts.length > 0 && (
             <React.Fragment>

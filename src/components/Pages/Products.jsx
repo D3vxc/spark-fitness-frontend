@@ -48,11 +48,8 @@ function Products() {
       );
 
       refetchProduct();
-      // Handle success (e.g., show a success message, refetch cart data)
-      // console.log("Product added to cart:", response.data);
+      toast.success("Product added to cart");
     } catch (error) {
-      // Handle error (e.g., show an error message)
-
       console.error("Error adding product to cart:", error);
     }
   };
