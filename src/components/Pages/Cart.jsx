@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import MainBanner from "../components/MainBanner";
 import { Box, Checkbox, Grid, Typography } from "@mui/material";
 import { useFetchCart } from "../Hooks/getCartData";
+import axios from "axios";
 
 function Cart() {
   const {
@@ -37,9 +38,43 @@ function Cart() {
     }, 0);
   }, [cartData, selectedProducts]);
 
-  const handleBuyNow = () => {
-    console.log("Selected products for purchase:", selectedProducts);
-    // Implement buy now functionality here
+  const initPayment = (data) => {
+    const options = {
+      key: "rzp_test_1XPSzkXhpRhsTx",
+      amount: data.amount,
+      currency: data.currency,
+      name: data.name,
+      description: "Test Transaction",
+      image: data.img,
+      order_id: data.id,
+      handler: async (response) => {
+        try {
+          const verifyUrl = "http://localhost:7001/payment/verify";
+          const { data } = await axios.post(verifyUrl, response);
+          console.log(data);
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+    const rzp1 = new window.Razorpay(options);
+    rzp1.open();
+  };
+
+  const handlePayment = async () => {
+    try {
+      const orderUrl = "http://localhost:7001/payment/orders";
+      const { data } = await axios.post(orderUrl, {
+        amount: totalAmount,
+      });
+      console.log("data", data);
+      initPayment(data.data);
+    } catch (error) {
+      console.error("Error", error);
+    }
   };
 
   return (
@@ -69,160 +104,6 @@ function Cart() {
             mx: "auto",
           }}
         >
-          {/* <Grid
-            item
-            xs={12}
-            sx={{
-              mt: "20px",
-              display: "flex",
-              background: "#F0F0F0",
-              height: "70px",
-              borderRadius: "10px",
-            }}
-          >
-            {" "}
-            <Grid item xl={1} lg={1} mx={1} sm={1} xs={1} sx={cartHeaderStyle}>
-              Select
-            </Grid>
-            <Grid item xl={2} lg={2} mx={2} sm={2} xs={2} sx={cartHeaderStyle}>
-              Image
-            </Grid>
-            <Grid item xl={2} lg={2} mx={2} sm={2} xs={2} sx={cartHeaderStyle}>
-              Name
-            </Grid>
-            <Grid item xl={3} lg={3} mx={3} sm={3} xs={3} sx={cartHeaderStyle}>
-              Description
-            </Grid>
-            <Grid item xl={1} lg={1} mx={1} sm={1} xs={1} sx={cartHeaderStyle}>
-              Price
-            </Grid>
-            <Grid item xl={1} lg={1} mx={1} sm={1} xs={1} sx={cartHeaderStyle}>
-              Quantity
-            </Grid>
-            <Grid item xl={2} lg={2} mx={2} sm={2} xs={2} sx={cartHeaderStyle}>
-              Payment Status
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              // borderRadius: "10px",
-              overflow: "hidden",
-            }}
-          >
-            {cartData?.productData?.map((item, index) => (
-              <Grid
-                item
-                xl={12}
-                lg={12}
-                mx={12}
-                sm={12}
-                xs={12}
-                key={index}
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  height: "200px",
-                  width: "2000px",
-                  // borderRadius: "10px",
-                  overflow: "hidden",
-                }}
-              >
-                <Grid
-                  item
-                  xl={1}
-                  lg={1}
-                  mx={1}
-                  sm={1}
-                  xs={1}
-                  sx={cartDataStyle}
-                >
-                  <Checkbox
-                    checked={selectedProducts.includes(item?.product?._id)}
-                    onChange={() => handleSelectProduct(item?.product?._id)}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  xl={2}
-                  lg={2}
-                  mx={2}
-                  sm={2}
-                  xs={2}
-                  sx={cartDataStyle}
-                >
-                  <img
-                    src={item?.product?.image}
-                    alt={item?.product?.name}
-                    style={{ width: "100px", height: "auto" }}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  xl={2}
-                  lg={2}
-                  mx={2}
-                  sm={2}
-                  xs={2}
-                  sx={cartDataStyle}
-                >
-                  <Typography>{item?.product.name}</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xl={3}
-                  lg={3}
-                  mx={3}
-                  sm={3}
-                  xs={3}
-                  sx={cartDataStyle}
-                >
-                  <Typography>{item?.product.description}</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xl={1}
-                  lg={1}
-                  mx={1}
-                  sm={1}
-                  xs={1}
-                  sx={cartDataStyle}
-                >
-                  <Typography>₹{item?.product.price}</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xl={1}
-                  lg={1}
-                  mx={1}
-                  sm={1}
-                  xs={1}
-                  sx={cartDataStyle}
-                >
-                  <Typography>{item?.quantity}</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xl={2}
-                  lg={2}
-                  mx={2}
-                  sm={2}
-                  xs={2}
-                  sx={cartDataStyle}
-                >
-                  <Typography>
-                    {item?.paymentStatus ? "Paid" : "Not Paid"}
-                  </Typography>
-                </Grid>
-              </Grid>
-            ))}
-          </Grid> */}
-
           {cartData?.productData?.length > 0 ? (
             <Grid
               container
@@ -285,9 +166,49 @@ function Cart() {
                   height: "400px",
                 }}
               /> */}
-
-              <Box>
-                <Typography variant='h4'>Your Cart is Empty</Typography>
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  color: "#BABABA",
+                  textAlign: "center",
+                }}
+              >
+                your cart is empty, <br />
+                to add product click the button below!!
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  padding: "15px",
+                  background: "#F2F2F2",
+                  color: "#FBFFFE",
+                  borderRadius: "10px",
+                  height: "35px",
+                  width: "100px",
+                  mt: "30px",
+                  cursor: "pointer",
+                  transform: "rotateX(70deg) rotateZ(30deg)",
+                  transformStyle: "preserve-3d",
+                  transition: "transform 0.5s",
+                  transition: "all 0.5s ease",
+                  "&:hover": {
+                    transform: "skew(0deg, 0deg) scale(1.1)",
+                    fontSize: "18px",
+                    background: "#A1F65E",
+                  },
+                }}
+                onClick={() => navigate("/products")}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                  }}
+                >
+                  Add now!!
+                </Typography>
               </Box>
             </Box>
           )}
@@ -348,8 +269,8 @@ function Cart() {
               <Box
                 item
                 onClick={() => {
-                  handleBuyNow();
-                  navigate("/checkout");
+                  handlePayment();
+                  // navigate("/checkout");
                 }}
                 sx={{
                   mt: 2,
