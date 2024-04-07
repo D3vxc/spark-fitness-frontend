@@ -42,7 +42,7 @@ function AddProduct() {
   // const imageFile = watch("imageFile");
 
   const onSubmit = async (formDataValues) => {
-    console.log("Form data received:", formDataValues);
+    // console.log("Form data received:", formDataValues);
     let imageUrl = ""; // Placeholder for the uploaded image URL
 
     // Check if there's an image to upload first
@@ -86,7 +86,7 @@ function AddProduct() {
         }
       );
 
-      console.log("Server response:", response.data);
+      // console.log("Server response:", response.data);
       reset(); // Reset form fields after successful submission
     } catch (error) {
       console.error(error);

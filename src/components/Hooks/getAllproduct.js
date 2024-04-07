@@ -3,7 +3,7 @@ import axios from "axios";
 import { getToken } from "../../utils/token";
 
 export const useFetchAllProduct = () => {
-  console.log("token here", getToken());
+  // console.log("token here", getToken());
   const { data, error, isLoading, refetch } = useQuery("Product", async () => {
     try {
       const response = await axios.get("products/allproducts", {
@@ -12,7 +12,7 @@ export const useFetchAllProduct = () => {
         },
       });
 
-      console.log("response", response);
+      // console.log("response", response);
       return response.data;
     } catch (error) {
       throw new Error("Error fetching users: " + error.message);

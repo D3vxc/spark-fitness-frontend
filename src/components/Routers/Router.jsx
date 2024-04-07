@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
-import LandingPage from "../LandingPages/LandingPage";
 import Register from "../Credentials/Register";
 import Login from "../Credentials/Login";
 import Home from "../Pages/Home";

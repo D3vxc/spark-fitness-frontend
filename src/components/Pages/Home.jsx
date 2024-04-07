@@ -36,7 +36,7 @@ function Home() {
           // Assuming getAllUsers makes the API call internally
           const usersData = await getAllUsers();
           setUsers(usersData); // Update state with user data
-          console.log(usersData);
+          // console.log(usersData);
         }
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -45,6 +45,14 @@ function Home() {
 
     fetchData();
   }, [isVerified, navigate, getAllUsers]);
+
+  const [openSundaySchedule, setOpenSundaySchedule] = useState(true);
+  const [openMondaySchedule, setOpenMondaySchedule] = useState(false);
+  const [openTuesdaySchedule, setOpenTuesdaySchedule] = useState(false);
+  const [openWednesdaySchedule, setOpenWednesdaySchedule] = useState(false);
+  const [openThursdaySchedule, setOpenThursdaySchedule] = useState(false);
+  const [openFridaySchedule, setOpenFridaySchedule] = useState(false);
+  const [openSaturdaySchedule, setOpenSaturdaySchedule] = useState(false);
 
   return (
     <React.Fragment>
@@ -213,7 +221,6 @@ function Home() {
             }}
           >
             {allClasses?.slice(0, 3)?.map((item, index) => {
-              console.log(item);
               return (
                 <Box
                   sx={{
@@ -341,6 +348,7 @@ function Home() {
             height: "auto",
             width: "80%",
             mx: "auto",
+            pb: "100px",
           }}
         >
           <Box
@@ -592,9 +600,47 @@ function Home() {
         </Box>
         <Box
           sx={{
-            height: "100px",
+            height: "100vh",
+            background: "#1D2229",
           }}
-        ></Box>
+        >
+          <Box>
+            <Typography>Time Table</Typography>
+            <Typography>Working Schedule</Typography>
+          </Box>
+          <Box>
+            <Typography onClick={() => setOpenSundaySchedule(true)}>
+              sunday
+            </Typography>
+            <Typography onClick={() => setOpenMondaySchedule(true)}>
+              monday
+            </Typography>
+            <Typography onClick={() => setOpenTuesdaySchedule(true)}>
+              tuesday
+            </Typography>
+            <Typography onClick={() => setOpenWednesdaySchedule(true)}>
+              wednesday
+            </Typography>
+            <Typography onClick={() => setOpenThursdaySchedule(true)}>
+              thursday
+            </Typography>
+            <Typography onClick={() => setOpenFridaySchedule(true)}>
+              friday
+            </Typography>
+            <Typography onClick={() => setOpenSaturdaySchedule(true)}>
+              saturday
+            </Typography>
+          </Box>
+          {openSundaySchedule === true ? <Box>sunday Schedule</Box> : null}
+          {openMondaySchedule === true ? <Box>monday Schedule</Box> : null}
+          {openTuesdaySchedule === true ? <Box>tuesday Schedule</Box> : null}
+          {openWednesdaySchedule === true ? (
+            <Box>wednesday Schedule</Box>
+          ) : null}
+          {openThursdaySchedule === true ? <Box>thursday Schedule</Box> : null}
+          {openFridaySchedule === true ? <Box>friday Schedule</Box> : null}
+          {openSaturdaySchedule === true ? <Box>saturday Schedule</Box> : null}
+        </Box>
       </Box>
     </React.Fragment>
   );

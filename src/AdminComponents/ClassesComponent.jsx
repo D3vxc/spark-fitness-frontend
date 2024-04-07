@@ -14,7 +14,7 @@ function ClassesComponent() {
     refetch: refetchClasses,
   } = useFetchAllClasses();
 
-  console.log("getAllClasses", getAllClasses);
+  // console.log("getAllClasses", getAllClasses);
 
   const [isLoading, setIsLoading] = useState(false);
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);

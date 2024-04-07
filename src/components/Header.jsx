@@ -2,15 +2,15 @@ import { Box, Button, Grid, Typography, Modal } from "@mui/material";
 import React, { useState } from "react";
 import LogoImage from "../assets/HomePageImages/Logo.svg";
 import { useNavigate } from "react-router-dom";
-import { hover } from "@testing-library/user-event/dist/hover";
 import { FetchUser } from "./Hooks/GetCurrentUserData";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { getToken } from "../utils/token";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function Header() {
   const navigate = useNavigate();
   const token = getToken();
-
   const [openProfile, setOpenProfile] = useState(false);
 
   const handleProfileClose = () => {
@@ -28,7 +28,13 @@ function Header() {
     refetch: LoggedInUserRefetch,
   } = FetchUser();
 
-  console.log("LoggedInUser", LoggedInUser);
+  // console.log("LoggedInUser", LoggedInUser);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+    toast.success("Logged out successfully");
+  };
 
   return (
     <React.Fragment>
@@ -142,7 +148,7 @@ function Header() {
           <Typography sx={TextStyle}>Diet</Typography>
         </Grid> */}
 
-        {LoggedInUser?.user === null ? (
+        {!token ? (
           <Grid
             item
             xs={2}
@@ -155,11 +161,22 @@ function Header() {
               justifyContent: "center",
               alignItems: "center",
               alignContent: "center",
-              cursor: "pointer",
             }}
-            onClick={() => navigate("/login")}
           >
-            <Typography sx={TextStyleForLogin}> Login</Typography>
+            <Typography
+              onClick={() => navigate("/login")}
+              sx={{
+                ...TextStyleForLogin,
+                cursor: "pointer",
+                "&:hover": {
+                  textDecoration: "underline",
+                  transition: "0.5s",
+                },
+              }}
+            >
+              {" "}
+              Login
+            </Typography>
           </Grid>
         ) : (
           <Grid
@@ -183,7 +200,6 @@ function Header() {
           </Grid>
         )}
       </Grid>
-
       <Modal open={openProfile} onClose={handleProfileClose}>
         <Box
           sx={{
@@ -199,25 +215,17 @@ function Header() {
             outline: "none",
           }}
         >
-          {token?.user === null ? (
-            <Grid
-              item
-              xs={2}
-              sm={2}
-              md={2}
-              lg={2}
-              xl={2}
+          {!token ? ( // Check if the token is not available
+            <Typography
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                alignContent: "center",
                 cursor: "pointer",
+                textAlign: "center",
+                textDecoration: "underline",
               }}
               onClick={() => navigate("/login")}
             >
-              <Typography sx={TextStyleForLogin}> Login</Typography>
-            </Grid>
+              Login
+            </Typography>
           ) : (
             <Box>
               <Box
@@ -232,7 +240,7 @@ function Header() {
                 <AccountCircleIcon
                   sx={{ fontSize: 30, cursor: "pointer" }}
                   onClick={handleProfileOpen}
-                />{" "}
+                />
                 <Typography id='modal-modal-title' variant='h5' component='h2'>
                   Hello {LoggedInUser?.user?.name || "N/A"}!!
                 </Typography>
@@ -242,6 +250,13 @@ function Header() {
               </Typography>
               <Typography id='modal-modal-description' sx={{ mt: 2 }}>
                 Phone: {LoggedInUser?.user?.phone || "N/A"}
+              </Typography>
+              <Typography
+                id='modal-modal-description'
+                sx={{ mt: 2, textDecoration: "underline", cursor: "pointer" }}
+                onClick={handleLogout}
+              >
+                Logout
               </Typography>
             </Box>
           )}

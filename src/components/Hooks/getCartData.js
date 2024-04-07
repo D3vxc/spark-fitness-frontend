@@ -16,7 +16,6 @@ export const useFetchCart = () => {
       throw new Error("Error fetching cart data: " + error.message);
     }
   });
-
   return { data, error, isLoading, refetch };
 };
 
@@ -30,7 +29,7 @@ export const useAddToCart = () => {
             Authorization: `Bearer ${getToken()}`,
           },
         });
-        console.log(response.data, "response data here");
+        // console.log(response.data, "response data here");
         return response.data;
       } catch (error) {
         throw new Error("Error fetching cart data: " + error.message);

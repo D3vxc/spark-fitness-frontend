@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import token, { getToken } from "../../utils/token.js";
 
@@ -11,7 +11,7 @@ export const FetchUser = () => {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-      console.log("response.data", response.data);
+      // console.log("response.data", response.data);
       return response.data;
     } catch (error) {
       // It's good practice to log the error or handle it appropriately

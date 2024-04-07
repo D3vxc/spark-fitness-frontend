@@ -26,7 +26,7 @@ function UsersComponent() {
     refetch: refetchUsers,
   } = useFetchAllUsers();
 
-  console.log("getAllUsers", getAllUsers);
+  // console.log("getAllUsers", getAllUsers);
 
   const [currentUser, setCurrentUser] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -54,7 +54,7 @@ function UsersComponent() {
   };
 
   const handleDeleteUser = () => {
-    console.log("Deleting user:", currentUser);
+    // console.log("Deleting user:", currentUser);
     // Call delete API here
     setOpenDialog(false);
     refetchUsers();

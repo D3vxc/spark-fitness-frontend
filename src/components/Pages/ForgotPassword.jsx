@@ -19,7 +19,7 @@ function ForgetPassword() {
     const isValid = validateInput();
 
     if (isValid) {
-      console.log("Email:", email, "OTP:", otp);
+      // console.log("Email:", email, "OTP:", otp);
       // You might want to send this data to your server here
       // Reset error states if needed
       setEmailError(false);

@@ -18,7 +18,7 @@ function Products() {
     refetch: refetchProduct,
   } = useFetchAllProduct();
 
-  console.log("getAllProduct", getAllProduct);
+  // console.log("getAllProduct", getAllProduct);
 
   const {
     data: AddToCartData,
@@ -49,7 +49,7 @@ function Products() {
 
       refetchProduct();
       // Handle success (e.g., show a success message, refetch cart data)
-      console.log("Product added to cart:", response.data);
+      // console.log("Product added to cart:", response.data);
     } catch (error) {
       // Handle error (e.g., show an error message)
 
