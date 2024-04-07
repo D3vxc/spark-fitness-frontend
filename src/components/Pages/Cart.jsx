@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainBanner from "../components/MainBanner";
 import { Box, Checkbox, Grid, Typography } from "@mui/material";
@@ -16,6 +16,10 @@ function Cart() {
   const navigate = useNavigate();
 
   const [selectedProducts, setSelectedProducts] = useState([]);
+
+  useEffect(() => {
+    refetchCart();
+  }, [selectedProducts, refetchCart]);
 
   const handleSelectProduct = (productId) => {
     const newSelection = selectedProducts.includes(productId)
@@ -48,7 +52,7 @@ function Cart() {
         }}
       >
         <MainBanner
-          mainText={"Cart"}
+          mainText={"your Cart"}
           image={
             "https://res.cloudinary.com/spark-cloud/image/upload/v1711707451/Banners/ProductPageBanner.svg"
           }
@@ -218,37 +222,75 @@ function Cart() {
               </Grid>
             ))}
           </Grid> */}
-          <Grid
-            container
-            sx={{
-              mt: "20px",
-              display: "flex",
-              background: "#F0F0F0",
-              height: "70px",
-              borderRadius: "10px",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Grid item xs={1} textAlign='center'>
-              Select
+
+          {cartData?.productData?.length > 0 ? (
+            <Grid
+              container
+              sx={{
+                mt: "20px",
+                display: "flex",
+                background: "#F0F0F0",
+                height: "70px",
+                borderRadius: "10px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Grid item xs={1} textAlign='center'>
+                Select
+              </Grid>
+              <Grid item xs={2} textAlign='center'>
+                Image
+              </Grid>
+              <Grid item xs={3} textAlign='center'>
+                Name
+              </Grid>
+              <Grid item xs={3} textAlign='center'>
+                Description
+              </Grid>
+              <Grid item xs={1} textAlign='center'>
+                Quantity
+              </Grid>
+              <Grid item xs={2} textAlign='center'>
+                Price
+              </Grid>
             </Grid>
-            <Grid item xs={2} textAlign='center'>
-              Image
-            </Grid>
-            <Grid item xs={3} textAlign='center'>
-              Name
-            </Grid>
-            <Grid item xs={3} textAlign='center'>
-              Description
-            </Grid>
-            <Grid item xs={1} textAlign='center'>
-              Quantity
-            </Grid>
-            <Grid item xs={2} textAlign='center'>
-              Price
-            </Grid>
-          </Grid>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                flexDirection: "column",
+              }}
+            >
+              <Box
+                component='img'
+                src={
+                  "https://res.cloudinary.com/spark-cloud/image/upload/v1712482976/utility/emptyCartGrey.svg"
+                }
+                sx={{
+                  width: "400px",
+                  height: "400px",
+                }}
+              />
+              {/* <Box
+                component='img'
+                src={
+                  "https://res.cloudinary.com/spark-cloud/image/upload/v1712482730/utility/emptyCart.svg"
+                }
+                sx={{
+                  width: "400px",
+                  height: "400px",
+                }}
+              /> */}
+
+              <Box>
+                <Typography variant='h4'>Your Cart is Empty</Typography>
+              </Box>
+            </Box>
+          )}
 
           {/* Cart Items */}
           {cartData?.productData?.map((item, index) => (

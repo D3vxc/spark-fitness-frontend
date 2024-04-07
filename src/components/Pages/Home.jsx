@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import MainImage from "../../assets/HomePageImages/Banner.svg";
 import { useFetchAllUsers } from "../Hooks/GetAllUsers";
 import { useFetchAllClasses } from "../Hooks/getAllClasses";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import AboutImageOne from "../../assets/HomePageImages/AboutImageOne.svg";
 import AboutImageTwo from "../../assets/HomePageImages/AboutImageTwo.svg";
 import AboutImageThree from "../../assets/HomePageImages/AboutImageThree.svg";
@@ -46,14 +46,17 @@ function Home() {
     fetchData();
   }, [isVerified, navigate, getAllUsers]);
 
-  const [openSundaySchedule, setOpenSundaySchedule] = useState(true);
-  const [openMondaySchedule, setOpenMondaySchedule] = useState(false);
-  const [openTuesdaySchedule, setOpenTuesdaySchedule] = useState(false);
-  const [openWednesdaySchedule, setOpenWednesdaySchedule] = useState(false);
-  const [openThursdaySchedule, setOpenThursdaySchedule] = useState(false);
-  const [openFridaySchedule, setOpenFridaySchedule] = useState(false);
-  const [openSaturdaySchedule, setOpenSaturdaySchedule] = useState(false);
+  const [activeDay, setActiveDay] = useState("sunday"); // Track the currently active day
 
+  const schedules = {
+    sunday: <Box>Sunday Schedule</Box>,
+    monday: <Box>Monday Schedule</Box>,
+    tuesday: <Box>Tuesday Schedule</Box>,
+    wednesday: <Box>Wednesday Schedule</Box>,
+    thursday: <Box>Thursday Schedule</Box>,
+    friday: <Box>Friday Schedule</Box>,
+    saturday: <Box>Saturday Schedule</Box>,
+  };
   return (
     <React.Fragment>
       <Box sx={{ background: "#FBFFFE", overflow: "hidden" }}>
@@ -598,48 +601,64 @@ function Home() {
             </Grid>
           </Grid>
         </Box>
+
         <Box
           sx={{
             height: "100vh",
             background: "#1D2229",
+            color: "#FFF", // Ensuring text color is visible against the dark background
           }}
         >
-          <Box>
-            <Typography>Time Table</Typography>
-            <Typography>Working Schedule</Typography>
-          </Box>
-          <Box>
-            <Typography onClick={() => setOpenSundaySchedule(true)}>
-              sunday
+          <Box sx={{ textAlign: "center", paddingTop: "20px" }}>
+            <Typography
+              sx={{
+                fontFamilu: "poppins",
+                color: "#A1F65E",
+                fontSize: "16px",
+                fontWeight: 600,
+                letterSpacing: "5px",
+                textTransform: "uppercase",
+              }}
+            >
+              Time Table
             </Typography>
-            <Typography onClick={() => setOpenMondaySchedule(true)}>
-              monday
-            </Typography>
-            <Typography onClick={() => setOpenTuesdaySchedule(true)}>
-              tuesday
-            </Typography>
-            <Typography onClick={() => setOpenWednesdaySchedule(true)}>
-              wednesday
-            </Typography>
-            <Typography onClick={() => setOpenThursdaySchedule(true)}>
-              thursday
-            </Typography>
-            <Typography onClick={() => setOpenFridaySchedule(true)}>
-              friday
-            </Typography>
-            <Typography onClick={() => setOpenSaturdaySchedule(true)}>
-              saturday
+            <Typography
+              sx={{
+                fontFamilu: "poppins",
+                color: "#FBFFFE",
+                fontSize: "35px",
+                fontWeight: 700,
+              }}
+            >
+              Working Schedule
             </Typography>
           </Box>
-          {openSundaySchedule === true ? <Box>sunday Schedule</Box> : null}
-          {openMondaySchedule === true ? <Box>monday Schedule</Box> : null}
-          {openTuesdaySchedule === true ? <Box>tuesday Schedule</Box> : null}
-          {openWednesdaySchedule === true ? (
-            <Box>wednesday Schedule</Box>
-          ) : null}
-          {openThursdaySchedule === true ? <Box>thursday Schedule</Box> : null}
-          {openFridaySchedule === true ? <Box>friday Schedule</Box> : null}
-          {openSaturdaySchedule === true ? <Box>saturday Schedule</Box> : null}
+          <Grid
+            container
+            spacing={2}
+            justifyContent='center'
+            alignItems='center'
+            sx={{ paddingTop: "20px" }}
+          >
+            <Grid item xs={12}>
+              <Grid container justifyContent='center' spacing={1}>
+                {Object.keys(schedules).map((day) => (
+                  <Grid key={day} item>
+                    <Button
+                      variant={activeDay === day ? "contained" : "outlined"}
+                      color='primary'
+                      onClick={() => setActiveDay(day)}
+                    >
+                      {day}
+                    </Button>
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              {schedules[activeDay]}
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </React.Fragment>
