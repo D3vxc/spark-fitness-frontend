@@ -52,8 +52,10 @@ function Cart() {
           const verifyUrl = "http://localhost:7001/payment/verify";
           const { data } = await axios.post(verifyUrl, response);
           console.log(data);
+          navigate("/payment-success");
         } catch (error) {
           console.log(error);
+          navigate("/payment-failed");
         }
       },
       theme: {

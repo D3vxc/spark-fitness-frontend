@@ -8,6 +8,7 @@ import AboutImageOne from "../../assets/HomePageImages/AboutImageOne.svg";
 import AboutImageTwo from "../../assets/HomePageImages/AboutImageTwo.svg";
 import AboutImageThree from "../../assets/HomePageImages/AboutImageThree.svg";
 import BackgroundPattern from "../../assets/HomePageImages/BackgroundPattern.svg";
+import BasicPlanIcon from "../../assets/HomePageImages/BasicPlanIcon.svg";
 
 function Home() {
   const navigate = useNavigate();
@@ -112,6 +113,7 @@ function Home() {
             </Box>
           </Box>
         </Box>
+
         <Box
           sx={{
             background: "#FBFFFE",
@@ -659,6 +661,197 @@ function Home() {
               {schedules[activeDay]}
             </Grid>
           </Grid>
+        </Box>
+
+        <Box
+          container
+          sx={{
+            width: "80%",
+            mx: "auto",
+            height: "50vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            position: "relative",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: "150px",
+              flexDirection: "column",
+              alignItems: "center",
+              zIndex: "1",
+            }}
+          >
+            <Typography
+              sx={{
+                fontFamilu: "poppins",
+                color: "#524FF5",
+                fontSize: "16px",
+                fontWeight: 600,
+                letterSpacing: "5px",
+                textTransform: "uppercase",
+              }}
+            >
+              our plan
+            </Typography>
+            <Typography
+              sx={{
+                fontFamilu: "poppins",
+                color: "#000",
+                fontSize: "35px",
+                fontWeight: 700,
+                lineHeight: "40px",
+              }}
+            >
+              Choose the program
+            </Typography>
+          </Box>
+          <Box>
+            <Typography
+              sx={{
+                position: "absolute",
+                top: "7%",
+                fontFamily: "poppins",
+                fontSize: "230px",
+                fontWeight: 800,
+                color: "#FBFFFE",
+                left: "50%",
+                background: "transparent",
+                textShadow: `
+      -1px -1px 0 #E3E3E3,  
+       1px -1px 0 #E3E3E3,
+      -1px  1px 0 #E3E3E3,
+       1px  1px 0 #E3E3E3`,
+              }}
+            >
+              Plans
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            height: "70vh",
+            background: "red",
+            width: "70%",
+            mx: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Box
+            sx={{
+              width: "30%",
+              height: "100%",
+              background: "#F9F9F9",
+              padding: "40px 20px 40px 20px",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                justifyContent: "flex-start",
+                alignItems: "flex-end",
+              }}
+            >
+              <Box component='img' src={BasicPlanIcon} />
+              <Typography
+                sx={{
+                  fontFamily: "poppins",
+                  color: "#000",
+                  fontSize: "24px",
+                  fontWeight: 700,
+                  lineHeight: "30px",
+                }}
+              >
+                Basic
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                borderTop: "1px solid #D3D3D3",
+                borderBottom: "1px solid #D3D3D3",
+                padding: "20px 0",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                mt: "30px",
+                gap: "5px",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: "poppins",
+                  color: "#000",
+                  fontSize: "22px",
+                  fontWeight: 600,
+                  lineHeight: "30px",
+                }}
+              >
+                ₹ 799 / month
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "poppins",
+                  color: "#000",
+                  fontSize: "16px",
+                  fontWeight: 500,
+                  lineHeight: "30px",
+                  background: "#FBFFFE",
+                  width: "auto",
+                  padding: "5px 20px",
+                }}
+              >
+                30% off for beginners
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                gap: "10px",
+                my: "30px",
+              }}
+            >
+              <Typography>1 Day Free Trial</Typography>
+              <Typography>
+                20 Mins Of <b> Heart-Pumping Spin</b>
+              </Typography>
+              <Typography>20 Mins Of Strength Training</Typography>
+              <Typography>
+                <b>50 class</b> Times Available
+              </Typography>
+              <Typography>20 Mins Of Invigorating yoga</Typography>
+            </Box>
+
+            <Box
+              sx={{
+                width: "40%",
+                background: "#1B2129",
+                color: "#FBFFFE",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "10px 20px",
+                fontFamily: "poppins",
+                fontSize: "16px",
+                fontWeight: 500,
+                lineHeight: "30px",
+                mx: "auto",
+              }}
+            >
+              Get Started
+            </Box>
+          </Box>
         </Box>
       </Box>
     </React.Fragment>

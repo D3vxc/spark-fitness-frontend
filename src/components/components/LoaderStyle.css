@@ -1,0 +1,64 @@
+.loader {
+  width: 96px; /* Increased from 48px */
+  height: 96px; /* Increased from 48px */
+  margin: auto;
+  position: relative;
+}
+
+.loader:before {
+  content: "";
+  width: 96px; /* Increased from 48px */
+  height: 10px; /* Increased from 5px and adjusted for visual balance */
+  background: #83f17b50;
+  position: absolute;
+  top: 120px; /* Adjusted for the new size */
+  left: 0;
+  border-radius: 50%;
+  animation: shadow324 0.5s linear infinite;
+}
+
+.loader:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #a1f65e;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 8px; /* Adjusted for visual balance */
+  animation: jump7456 0.5s linear infinite;
+}
+
+@keyframes jump7456 {
+  15% {
+    border-bottom-right-radius: 6px; /* Adjusted for visual balance */
+  }
+
+  25% {
+    transform: translateY(18px) rotate(22.5deg); /* Adjusted translateY */
+  }
+
+  50% {
+    transform: translateY(36px) scale(1, 0.9) rotate(45deg); /* Adjusted translateY */
+    border-bottom-right-radius: 80px; /* Adjusted for visual balance */
+  }
+
+  75% {
+    transform: translateY(18px) rotate(67.5deg); /* Adjusted translateY */
+  }
+
+  100% {
+    transform: translateY(0) rotate(90deg);
+  }
+}
+
+@keyframes shadow324 {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+
+  50% {
+    transform: scale(1.4, 1); /* Adjusted scale for visual effect */
+  }
+}

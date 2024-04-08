@@ -9,6 +9,7 @@ import axios from "axios";
 import { getToken } from "../../utils/token";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function Products() {
   const {
@@ -154,149 +155,174 @@ function Products() {
             mx: "auto",
           }}
         >
-          {getAllProduct?.map((x, i) => (
-            <Paper
-              onMouseEnter={() => setHoveredProduct(x._id)}
-              onMouseLeave={() => setHoveredProduct(null)}
-              onClick={() => {
-                setProduct(x?._id);
-                // navigate(`/productView/${x?._id}`);
-                // console.log(x, "product data here", x?._id);
-              }}
-              key={i}
-              elevation={0}
+          {getproductLoading ? (
+            <Box
               sx={{
+                width: "100%",
+                height: "200px",
+                my: "100px",
                 display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-start",
-                width: "250px",
-                height: "550px",
-                background: "transparent",
-                margin: "20px",
-                gap: "10px",
-                cursor: "pointer",
-                position: "relative",
-                "&:hover .addToCartButton": {
-                  visibility: "visible",
-                },
-                // "& .productImage": {
-                //   // Assign a class for targeting
-                //   width: "100%",
-                //   height: "auto",
-                //   mx: "auto",
-                //   transition: "height 0.3s ease-out", // Ensure smooth transition for both hover on and off
-                // },
-                // "&:hover .productImage": {
-                //   height: "calc(100% - 150px)", // Shrink the height of the image by 50px only on hover
-                // },
-                // "&:hover .productDescription": {
-                //   maxHeight: "100px", // Allow for one more line of text in description
-                // },
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <Box component='img' className='productImage' src={x?.image} />
-
-              <Button
-                className='addToCartButton'
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent triggering the click on the Paper
-                  AddProductToCart(x?._id, selectedQuantities[x?._id] || 1);
-                  setSelectedQuantities(1);
-                }}
-                sx={{
-                  width: "25px",
-                  height: "60px",
-                  borderRadius: "50%",
-                  position: "absolute",
-                  left: "70%",
-                  background: "#fff",
-                  top: "2%",
-                  visibility: "hidden",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-                  "&:hover": {
-                    background: "#E5E5E5",
-                  },
-                }}
-              >
-                <AddShoppingCartIcon
-                  sx={{ color: "#000", fontSize: "20px", width: "100px" }}
-                />
-              </Button>
-
-              <Typography
-                className='productDescription'
-                sx={{
-                  textAlign: "left",
-                  maxHeight: "40px",
-                  overflow: "hidden",
-                  fontFamily: "poppins",
-                  color: "#000",
-                  fontSize: "16px",
-                  fontWeight: 400,
-                  lineHeight: "20px",
-                  transition: "max-height 0.3s ease-in-out",
-                }}
-              >
-                {x?.description}
-              </Typography>
-
-              <Typography
-                sx={{
-                  textAlign: "left",
-                  fontFamily: "poppins",
-                  color: "#000",
-                  minHeight: "50px",
-                  fontSize: "20px",
-                  fontWeight: 500,
-                  lineHeight: "25px",
-                }}
-              >
-                {x?.name}
-              </Typography>
-
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  visibility: hoveredProduct === x._id ? "visible" : "hidden", // Control visibility based on hover
-                }}
-              >
-                <Typography
+              <Loader />
+            </Box>
+          ) : (
+            <React.Fragment>
+              {getAllProduct?.map((x, i) => (
+                <Paper
+                  onMouseEnter={() => setHoveredProduct(x._id)}
+                  onMouseLeave={() => setHoveredProduct(null)}
+                  onClick={() => {
+                    setProduct(x?._id);
+                    // navigate(`/productView/${x?._id}`);
+                    // console.log(x, "product data here", x?._id);
+                  }}
+                  key={i}
+                  elevation={0}
                   sx={{
-                    textAlign: "left",
-                    color: "#000",
-                    fontSize: "20px",
-                    fontWeight: 500,
-                    lineHeight: "22px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    width: "250px",
+                    height: "550px",
+                    background: "transparent",
+                    margin: "20px",
+                    gap: "10px",
+                    cursor: "pointer",
+                    position: "relative",
+                    "&:hover .addToCartButton": {
+                      visibility: "visible",
+                    },
+                    // "& .productImage": {
+                    //   // Assign a class for targeting
+                    //   width: "100%",
+                    //   height: "auto",
+                    //   mx: "auto",
+                    //   transition: "height 0.3s ease-out", // Ensure smooth transition for both hover on and off
+                    // },
+                    // "&:hover .productImage": {
+                    //   height: "calc(100% - 150px)", // Shrink the height of the image by 50px only on hover
+                    // },
+                    // "&:hover .productDescription": {
+                    //   maxHeight: "100px", // Allow for one more line of text in description
+                    // },
                   }}
                 >
-                  ₹{x?.price}
-                </Typography>
-                <TextField
-                  type='number'
-                  variant='outlined'
-                  size='small'
-                  sx={{
-                    width: "100px",
-                  }}
-                  value={selectedQuantities[x._id] || 1}
-                  onChange={(e) => {
-                    const newQuantities = {
-                      ...selectedQuantities,
-                      [x._id]: Math.max(1, Math.min(e.target.value, x.stock)),
-                    };
-                    setSelectedQuantities(newQuantities);
-                  }}
-                  inputProps={{ min: 1, max: x.stock, step: 1 }}
-                />
-              </Box>
-            </Paper>
-          ))}
+                  <Box
+                    component='img'
+                    className='productImage'
+                    src={x?.image}
+                  />
+
+                  <Button
+                    className='addToCartButton'
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the click on the Paper
+                      AddProductToCart(x?._id, selectedQuantities[x?._id] || 1);
+                      setSelectedQuantities(1);
+                    }}
+                    sx={{
+                      width: "25px",
+                      height: "60px",
+                      borderRadius: "50%",
+                      position: "absolute",
+                      left: "70%",
+                      background: "#fff",
+                      top: "2%",
+                      visibility: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+                      "&:hover": {
+                        background: "#E5E5E5",
+                      },
+                    }}
+                  >
+                    <AddShoppingCartIcon
+                      sx={{ color: "#000", fontSize: "20px", width: "100px" }}
+                    />
+                  </Button>
+
+                  <Typography
+                    className='productDescription'
+                    sx={{
+                      textAlign: "left",
+                      maxHeight: "40px",
+                      overflow: "hidden",
+                      fontFamily: "poppins",
+                      color: "#000",
+                      fontSize: "16px",
+                      fontWeight: 400,
+                      lineHeight: "20px",
+                      transition: "max-height 0.3s ease-in-out",
+                    }}
+                  >
+                    {x?.description}
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      textAlign: "left",
+                      fontFamily: "poppins",
+                      color: "#000",
+                      minHeight: "50px",
+                      fontSize: "20px",
+                      fontWeight: 500,
+                      lineHeight: "25px",
+                    }}
+                  >
+                    {x?.name}
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      visibility:
+                        hoveredProduct === x._id ? "visible" : "hidden", // Control visibility based on hover
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        textAlign: "left",
+                        color: "#000",
+                        fontSize: "20px",
+                        fontWeight: 500,
+                        lineHeight: "22px",
+                      }}
+                    >
+                      ₹{x?.price}
+                    </Typography>
+                    <TextField
+                      type='number'
+                      variant='outlined'
+                      size='small'
+                      sx={{
+                        width: "100px",
+                      }}
+                      value={selectedQuantities[x._id] || 1}
+                      onChange={(e) => {
+                        const newQuantities = {
+                          ...selectedQuantities,
+                          [x._id]: Math.max(
+                            1,
+                            Math.min(e.target.value, x.stock)
+                          ),
+                        };
+                        setSelectedQuantities(newQuantities);
+                      }}
+                      inputProps={{ min: 1, max: x.stock, step: 1 }}
+                    />
+                  </Box>
+                </Paper>
+              ))}
+            </React.Fragment>
+          )}
         </Box>
       </Box>
     </React.Fragment>
