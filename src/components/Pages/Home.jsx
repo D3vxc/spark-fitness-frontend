@@ -9,6 +9,10 @@ import AboutImageTwo from "../../assets/HomePageImages/AboutImageTwo.svg";
 import AboutImageThree from "../../assets/HomePageImages/AboutImageThree.svg";
 import BackgroundPattern from "../../assets/HomePageImages/BackgroundPattern.svg";
 import BasicPlanIcon from "../../assets/HomePageImages/BasicPlanIcon.svg";
+import StandardPlanIcon from "../../assets/HomePageImages/StandardPlanIcon.svg";
+import PremiumPlanIcon from "../../assets/HomePageImages/PremiumPlanIcon.svg";
+import { useFetchAllMembership } from "../Hooks/getMembershipdetails";
+import axios from "axios";
 
 function Home() {
   const navigate = useNavigate();
@@ -47,6 +51,13 @@ function Home() {
     fetchData();
   }, [isVerified, navigate, getAllUsers]);
 
+  const {
+    data: allMemberships,
+    isLoading: membershipsLoading,
+    error: membershipsError,
+    refetch: refetchMemberships,
+  } = useFetchAllMembership();
+
   const [activeDay, setActiveDay] = useState("sunday"); // Track the currently active day
 
   const schedules = {
@@ -58,6 +69,48 @@ function Home() {
     friday: <Box>Friday Schedule</Box>,
     saturday: <Box>Saturday Schedule</Box>,
   };
+
+  const initPayment = (data) => {
+    console.log("data", data);
+    const options = {
+      key: "rzp_test_1XPSzkXhpRhsTx",
+      amount: data.amount,
+      currency: data.currency,
+      name: data.name,
+      description: "Test Transaction",
+      order_id: data.id,
+      handler: async (response) => {
+        try {
+          const verifyUrl = "http://localhost:7001/payment/verify";
+          const { data } = await axios.post(verifyUrl, response);
+          console.log(data);
+          navigate("/payment-success");
+        } catch (error) {
+          console.log(error);
+          navigate("/payment-failed");
+        }
+      },
+      theme: {
+        color: "#A1F65E",
+      },
+    };
+    const rzp1 = new window.Razorpay(options);
+    rzp1.open();
+  };
+
+  const handleMembershipPayment = async (PlanPrice) => {
+    try {
+      const orderUrl = "http://localhost:7001/payment/orders";
+      const { data } = await axios.post(orderUrl, {
+        amount: PlanPrice,
+      });
+      console.log("data", data);
+      initPayment(data.data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
   return (
     <React.Fragment>
       <Box sx={{ background: "#FBFFFE", overflow: "hidden" }}>
@@ -732,127 +785,183 @@ function Home() {
           </Box>
         </Box>
 
-        <Box
+        <Grid
+          container
           sx={{
-            height: "70vh",
-            background: "red",
-            width: "70%",
+            width: "80%",
             mx: "auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
           }}
         >
-          <Box
-            sx={{
-              width: "30%",
-              height: "100%",
-              background: "#F9F9F9",
-              padding: "40px 20px 40px 20px",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                gap: "10px",
-                justifyContent: "flex-start",
-                alignItems: "flex-end",
-              }}
-            >
-              <Box component='img' src={BasicPlanIcon} />
-              <Typography
-                sx={{
-                  fontFamily: "poppins",
-                  color: "#000",
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  lineHeight: "30px",
-                }}
-              >
-                Basic
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                borderTop: "1px solid #D3D3D3",
-                borderBottom: "1px solid #D3D3D3",
-                padding: "20px 0",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                mt: "30px",
-                gap: "5px",
-              }}
-            >
-              <Typography
-                sx={{
-                  fontFamily: "poppins",
-                  color: "#000",
-                  fontSize: "22px",
-                  fontWeight: 600,
-                  lineHeight: "30px",
-                }}
-              >
-                ₹ 799 / month
-              </Typography>
-              <Typography
-                sx={{
-                  fontFamily: "poppins",
-                  color: "#000",
-                  fontSize: "16px",
-                  fontWeight: 500,
-                  lineHeight: "30px",
-                  background: "#FBFFFE",
-                  width: "auto",
-                  padding: "5px 20px",
-                }}
-              >
-                30% off for beginners
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-                gap: "10px",
-                my: "30px",
-              }}
-            >
-              <Typography>1 Day Free Trial</Typography>
-              <Typography>
-                20 Mins Of <b> Heart-Pumping Spin</b>
-              </Typography>
-              <Typography>20 Mins Of Strength Training</Typography>
-              <Typography>
-                <b>50 class</b> Times Available
-              </Typography>
-              <Typography>20 Mins Of Invigorating yoga</Typography>
-            </Box>
+          {allMemberships?.map((x, y) => {
+            // const currentUserPlan = getCurrentUserPlan();
 
-            <Box
-              sx={{
-                width: "40%",
-                background: "#1B2129",
-                color: "#FBFFFE",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "10px 20px",
-                fontFamily: "poppins",
-                fontSize: "16px",
-                fontWeight: 500,
-                lineHeight: "30px",
-                mx: "auto",
-              }}
-            >
-              Get Started
-            </Box>
-          </Box>
-        </Box>
+            // // Logic to determine which icon to use based on the plan
+            // const getPlanIcon = (planName) => {
+            //   switch (planName) {
+            //     case "Standard":
+            //       return StandardPlanIcon;
+            //     case "Premium":
+            //       return PremiumPlanIcon;
+            //     default:
+            //       return BasicPlanIcon;
+            //   }
+            // };
+
+            // // Determine if the plan being rendered matches the current user's plan
+            // const isCurrentUserPlan = plan.PlanName === currentUserPlan;
+
+            return (
+              <Grid
+                item
+                xs={4}
+                sm={4}
+                md={4}
+                lg={4}
+                xl={4}
+                sx={{
+                  width: "100%",
+                  mx: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "85%",
+                    height: "100%",
+                    background: "#F9F9F9",
+                    padding: "40px 20px 40px 20px",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: "10px",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                    }}
+                  >
+                    {x?.PlanName === "Basic" ? (
+                      <Box component='img' src={BasicPlanIcon} />
+                    ) : x?.PlanName === "Standard" ? (
+                      <Box component='img' src={StandardPlanIcon} />
+                    ) : x?.PlanName === "Premium" ? (
+                      <Box component='img' src={PremiumPlanIcon} />
+                    ) : null}
+
+                    <Typography
+                      sx={{
+                        fontFamily: "poppins",
+                        color: "#000",
+                        fontSize: "24px",
+                        fontWeight: 700,
+                        lineHeight: "30px",
+                      }}
+                    >
+                      {x?.PlanName}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      borderTop: "1px solid #D3D3D3",
+                      borderBottom: "1px solid #D3D3D3",
+                      padding: "20px 0",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      mt: "30px",
+                      gap: "5px",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontFamily: "poppins",
+                        color: "#000",
+                        fontSize: "22px",
+                        fontWeight: 600,
+                        lineHeight: "30px",
+                      }}
+                    >
+                      ₹ {x?.PlanPrice} / month
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontFamily: "poppins",
+                        color: "#000",
+                        fontSize: "16px",
+                        fontWeight: 500,
+                        lineHeight: "30px",
+                        background: "#FBFFFE",
+                        width: "auto",
+                        padding: "5px 20px",
+                      }}
+                    >
+                      {x?.Discounts}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      gap: "10px",
+                      my: "30px",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        color: "#524FF5",
+                        fontSize: "16px",
+                        fontFamily: "poppins",
+                        fontWeight: 500,
+                        letterSpacing: "1px",
+                      }}
+                    >
+                      {" "}
+                      {x?.FreeTrial}{" "}
+                    </Typography>
+
+                    {x?.WhatWeOffers?.map((item, index) => {
+                      return <Typography key={index}>{item}</Typography>;
+                    })}
+                  </Box>
+
+                  <Box
+                    sx={{
+                      width: "40%",
+                      background: "#1B2129",
+                      color: "#FBFFFE",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      padding: "10px 20px",
+                      fontFamily: "poppins",
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      lineHeight: "30px",
+                      mx: "auto",
+                      border: "1px solid #1B2129",
+                      "&:hover": {
+                        background: "transparent",
+                        color: "#000",
+                        cursor: "pointer",
+                        border: "1px solid #BABABA",
+                      },
+                    }}
+                    // onClick={handleMembershipPayment()}
+                    onClick={() => handleMembershipPayment(x?.PlanPrice)}
+                  >
+                    Get Started
+                  </Box>
+                </Box>
+              </Grid>
+            );
+          })}
+        </Grid>
       </Box>
     </React.Fragment>
   );

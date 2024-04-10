@@ -251,6 +251,10 @@ function Header() {
               <Typography id='modal-modal-description' sx={{ mt: 2 }}>
                 Phone: {LoggedInUser?.user?.phone || "N/A"}
               </Typography>
+              <Typography id='modal-modal-description' sx={{ mt: 2 }}>
+                Current Plan:{" "}
+                {LoggedInUser?.user?.membershipPlanDetails?.PlanName || "N/A"}
+              </Typography>
               <Typography
                 id='modal-modal-description'
                 sx={{ mt: 2, textDecoration: "underline", cursor: "pointer" }}
