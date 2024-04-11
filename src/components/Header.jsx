@@ -238,21 +238,65 @@ function Header() {
                   alignItems: "center",
                   alignContent: "center",
                   gap: "5px",
+                  borderBottom: "1px solid #D3D3D3",
+                  paddingBottom: "5px",
                 }}
               >
-                <AccountCircleIcon
-                  sx={{ fontSize: 30, cursor: "pointer" }}
-                  onClick={handleProfileOpen}
-                />
+                <Box
+                  component='img'
+                  src={
+                    "https://res.cloudinary.com/spark-cloud/image/upload/v1712830751/utility/userIcon.svg"
+                  }
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                  }}
+                />{" "}
                 <Typography id='modal-modal-title' variant='h5' component='h2'>
                   Hello {LoggedInUser?.user?.name || "N/A"}!!
                 </Typography>
               </Box>
-              <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-                Email: {LoggedInUser?.user?.email || "N/A"}
+              <Typography
+                id='modal-modal-description'
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                }}
+              >
+                <Box
+                  component='img'
+                  src={
+                    "https://res.cloudinary.com/spark-cloud/image/upload/v1712830751/utility/mailIcon.svg"
+                  }
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                  }}
+                />{" "}
+                : {LoggedInUser?.user?.email || "N/A"}
               </Typography>
-              <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-                Phone: {LoggedInUser?.user?.phone || "N/A"}
+              <Typography
+                id='modal-modal-description'
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                }}
+              >
+                <Box
+                  component='img'
+                  src={
+                    "https://res.cloudinary.com/spark-cloud/image/upload/v1712830855/utility/phoneIcon.svg"
+                  }
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                  }}
+                />{" "}
+                : {LoggedInUser?.user?.phone || "N/A"}
               </Typography>
               <Typography
                 id='modal-modal-description'
