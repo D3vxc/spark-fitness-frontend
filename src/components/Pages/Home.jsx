@@ -13,6 +13,7 @@ import StandardPlanIcon from "../../assets/HomePageImages/StandardPlanIcon.svg";
 import PremiumPlanIcon from "../../assets/HomePageImages/PremiumPlanIcon.svg";
 import { useFetchAllMembership } from "../Hooks/getMembershipdetails";
 import axios from "axios";
+import { FetchUser } from "../Hooks/GetCurrentUserData";
 
 function Home() {
   const navigate = useNavigate();
@@ -69,6 +70,13 @@ function Home() {
     friday: <Box>Friday Schedule</Box>,
     saturday: <Box>Saturday Schedule</Box>,
   };
+
+  const {
+    data: LoggedInUser,
+    error: LoggedInUserError,
+    isLoading: LoggedInUserLoading,
+    refetch: LoggedInUserRefetch,
+  } = FetchUser();
 
   const initPayment = (data) => {
     console.log("data", data);
@@ -933,7 +941,11 @@ function Home() {
                   <Box
                     sx={{
                       width: "40%",
-                      background: "#1B2129",
+                      background:
+                        LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
+                        x?.PlanName
+                          ? "#7D7D7D"
+                          : "#1B2129", // Change background color to indicate disabled state
                       color: "#FBFFFE",
                       display: "flex",
                       justifyContent: "center",
@@ -944,18 +956,48 @@ function Home() {
                       fontWeight: 500,
                       lineHeight: "30px",
                       mx: "auto",
-                      border: "1px solid #1B2129",
-                      "&:hover": {
-                        background: "transparent",
-                        color: "#000",
-                        cursor: "pointer",
-                        border: "1px solid #BABABA",
-                      },
+                      border:
+                        LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
+                        x?.PlanName
+                          ? "1px solid #7D7D7D"
+                          : "1px solid #1B2129",
+                      cursor:
+                        LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
+                        x?.PlanName
+                          ? "not-allowed"
+                          : "pointer",
+                      "&:hover":
+                        LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
+                        x?.PlanName
+                          ? {}
+                          : {
+                              background: "transparent",
+                              color: "#000",
+                              border: "1px solid #BABABA",
+                            },
                     }}
-                    // onClick={handleMembershipPayment()}
-                    onClick={() => handleMembershipPayment(x?.PlanPrice)}
+                    onClick={() => {
+                      if (
+                        LoggedInUser?.user?.membershipPlanDetails?.PlanName !==
+                        x?.PlanName
+                      ) {
+                        handleMembershipPayment(x?.PlanPrice);
+                      }
+                    }}
                   >
-                    Get Started
+                    <Typography
+                      sx={{
+                        fontFamily: "poppins",
+                        fontSize: "16px",
+                        fontWeight: 500,
+                        lineHeight: "30px",
+                      }}
+                    >
+                      {LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
+                      x?.PlanName
+                        ? "Current Plan"
+                        : "Get Started"}
+                    </Typography>
                   </Box>
                 </Box>
               </Grid>

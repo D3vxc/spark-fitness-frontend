@@ -7,6 +7,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { getToken } from "../utils/token";
 import axios from "axios";
 import { toast } from "react-toastify";
+import BasicPlanIcon from "../assets/HomePageImages/BasicPlanIcon.svg";
+import StandardPlanIcon from "../assets/HomePageImages/StandardPlanIcon.svg";
+import PremiumPlanIcon from "../assets/HomePageImages/PremiumPlanIcon.svg";
 
 function Header() {
   const navigate = useNavigate();
@@ -251,8 +254,40 @@ function Header() {
               <Typography id='modal-modal-description' sx={{ mt: 2 }}>
                 Phone: {LoggedInUser?.user?.phone || "N/A"}
               </Typography>
-              <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-                Current Plan:{" "}
+              <Typography
+                id='modal-modal-description'
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  fontWeight: 600,
+                }}
+              >
+                {LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
+                "Basic" ? (
+                  <Box
+                    component='img'
+                    src={BasicPlanIcon}
+                    sx={{ height: "30px", width: "30px" }}
+                  />
+                ) : LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
+                  "Standard" ? (
+                  <Box
+                    component='img'
+                    src={StandardPlanIcon}
+                    sx={{ height: "30px", width: "30px" }}
+                  />
+                ) : LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
+                  "Premium" ? (
+                  <Box
+                    component='img'
+                    src={PremiumPlanIcon}
+                    sx={{ height: "30px", width: "30px" }}
+                  />
+                ) : null}
                 {LoggedInUser?.user?.membershipPlanDetails?.PlanName || "N/A"}
               </Typography>
               <Typography

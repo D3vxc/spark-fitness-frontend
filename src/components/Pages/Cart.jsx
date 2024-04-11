@@ -59,7 +59,7 @@ function Cart() {
         }
       },
       theme: {
-        color: "#3399cc",
+        color: "#A1F65E",
       },
     };
     const rzp1 = new window.Razorpay(options);
