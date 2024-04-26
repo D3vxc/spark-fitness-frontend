@@ -89,7 +89,7 @@ function Cart() {
         }}
       >
         <MainBanner
-          mainText={"your Cart"}
+          mainText={"My Cart"}
           image={
             "https://res.cloudinary.com/spark-cloud/image/upload/v1711707451/Banners/ProductPageBanner.svg"
           }

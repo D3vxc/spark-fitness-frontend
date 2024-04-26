@@ -2,19 +2,21 @@ import { Box, Button, Grid, Typography, Modal } from "@mui/material";
 import React, { useState } from "react";
 import LogoImage from "../assets/HomePageImages/Logo.svg";
 import { useNavigate } from "react-router-dom";
-import { FetchUser } from "./Hooks/GetCurrentUserData";
+import { FetchUser, Logout } from "./Hooks/GetCurrentUserData";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { getToken } from "../utils/token";
-import axios from "axios";
 import { toast } from "react-toastify";
 import BasicPlanIcon from "../assets/HomePageImages/BasicPlanIcon.svg";
 import StandardPlanIcon from "../assets/HomePageImages/StandardPlanIcon.svg";
 import PremiumPlanIcon from "../assets/HomePageImages/PremiumPlanIcon.svg";
+import CartPopUp from "../components/Pages/CartPopUp";
 
-function Header() {
+function Header(props) {
   const navigate = useNavigate();
   const token = getToken();
   const [openProfile, setOpenProfile] = useState(false);
+  const [openCart, setOpenCart] = useState(false);
 
   const handleProfileClose = () => {
     setOpenProfile(false);
@@ -24,6 +26,14 @@ function Header() {
     setOpenProfile(true);
   };
 
+  const handleCartClose = () => {
+    setOpenCart(false);
+  };
+
+  const handleCartOpen = () => {
+    setOpenCart(true);
+  };
+
   const {
     data: LoggedInUser,
     error: LoggedInUserError,
@@ -31,12 +41,24 @@ function Header() {
     refetch: LoggedInUserRefetch,
   } = FetchUser();
 
-  // console.log("LoggedInUser", LoggedInUser);
+  const {
+    data: LogoutData,
+    error: LogoutError,
+    isLoading: LogoutLoading,
+    refetch: LogoutRefetch,
+  } = Logout();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-    toast.success("Logged out successfully");
+  const handleLogout = async () => {
+    try {
+      await LogoutRefetch();
+      toast.success("Logged out successfully");
+      // cookie.remove("token");
+      localStorage.removeItem("token");
+      LoggedInUserRefetch();
+      navigate("/");
+    } catch (error) {
+      toast.error("Error logging out");
+    }
   };
 
   return (
@@ -69,7 +91,6 @@ function Header() {
             sx={{
               mx: "10px",
               cursor: "pointer",
-              //  height: "30px", width: "30px"
             }}
           />
 
@@ -121,14 +142,12 @@ function Header() {
           md={1}
           lg={1}
           xl={1}
-          sx={{
-            ...NavbarBtn,
-          }}
-          onClick={() => navigate("/products")}
+          sx={{ ...NavbarBtn }}
+          onClick={() => navigate("/bmi")}
         >
-          <Typography sx={TextStyle}>Products</Typography>
+          {" "}
+          <Typography sx={TextStyle}>BMI</Typography>
         </Grid>
-
         <Grid
           item
           xs={1}
@@ -136,20 +155,13 @@ function Header() {
           md={1}
           lg={1}
           xl={1}
-          sx={{ ...NavbarBtn }}
-          onClick={() => navigate("/cart")}
+          sx={{
+            ...NavbarBtn,
+          }}
+          onClick={() => navigate("/products")}
         >
-          {" "}
-          <Typography sx={TextStyle}> Cart</Typography>
+          <Typography sx={TextStyle}>Products</Typography>
         </Grid>
-        {/* <Grid item xs={1} sm={1} md={1} lg={1} xl={1} sx={{ ...NavbarBtn }}>
-          {" "}
-          <Typography sx={TextStyle}>Schedule</Typography>
-        </Grid>
-        <Grid item xs={1} sm={1} md={1} lg={1} xl={1} sx={{ ...NavbarBtn }}>
-          {" "}
-          <Typography sx={TextStyle}>Diet</Typography>
-        </Grid> */}
 
         {!token ? (
           <Grid
@@ -191,7 +203,7 @@ function Header() {
             xl={2}
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "space-evenly",
               alignItems: "center",
               alignContent: "center",
             }}
@@ -200,6 +212,10 @@ function Header() {
               sx={{ fontSize: 40, cursor: "pointer" }}
               onClick={handleProfileOpen}
             />
+            <ShoppingCartOutlinedIcon
+              sx={{ fontSize: 40, cursor: "pointer" }}
+              onClick={handleCartOpen}
+            />
           </Grid>
         )}
       </Grid>
@@ -207,18 +223,28 @@ function Header() {
         <Box
           sx={{
             position: "absolute",
-            top: "20%",
-            left: "90%",
+            top: "24%",
+            left: "87.6%",
             transform: "translate(-50%, -50%)",
             width: "200px",
-            bgcolor: "background.paper",
+            bgcolor: "#FBFFFE",
             boxShadow: 24,
             p: 4,
             borderRadius: "10px",
             outline: "none",
+            "::before": {
+              content: '""',
+              position: "absolute",
+              bottom: "100%", // This positions the pseudo-element above the Box
+              left: "50%",
+              transform: "translateX(-50%)",
+              borderWidth: "10px",
+              borderStyle: "solid",
+              borderColor: "transparent transparent #FBFFFE transparent",
+            },
           }}
         >
-          {!token ? ( // Check if the token is not available
+          {!LoggedInUser?.email && LoggedInUser?.email === "N/A" ? ( // Check if the token is not available
             <Typography
               sx={{
                 cursor: "pointer",
@@ -345,13 +371,32 @@ function Header() {
           )}
         </Box>
       </Modal>
+      <Modal
+        open={openCart}
+        onClose={handleCartClose}
+        sx={{
+          "& .MuiPaper-root": {
+            animation: "slide-in 2s forwards",
+          },
+          "@keyframes slide-in": {
+            from: {
+              transform: "translateX(50%)",
+            },
+            to: {
+              transform: "translateX(0)",
+            },
+          },
+        }}
+        closeAfterTransition
+      >
+        <CartPopUp CloseModal={handleCartClose} />
+      </Modal>
     </React.Fragment>
   );
 }
 
 export default Header;
 const NavbarBtn = {
-  // padding: "20px",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -376,7 +421,6 @@ const TextStyle = {
   "&:hover": {
     fontSize: "20px",
     transition: "0.5s",
-    // background: "#E3E3E3",
     textTransform: " underline",
     display: "flex",
     flexWrap: "wrap",

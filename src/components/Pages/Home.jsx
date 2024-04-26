@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import MainImage from "../../assets/HomePageImages/Banner.svg";
 import { useFetchAllUsers } from "../Hooks/GetAllUsers";
@@ -78,14 +78,78 @@ function Home() {
     refetch: LoggedInUserRefetch,
   } = FetchUser();
 
+  // const handleMembershipPayment = async (planPrice, planId) => {
+  //   try {
+  //     const orderResponse = await axios.post(
+  //       "http://localhost:7001/payment/membership/update",
+  //       {
+  //         userId: LoggedInUser?.user?._id,
+  //         planId,
+  //         amount: planPrice,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
+
+  //     if (orderResponse.data.success) {
+  //       initPayment(orderResponse.data.order, planId);
+  //     } else {
+  //       console.error("Order creation failed:", orderResponse.data.message);
+  //       navigate("/payment-failed");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in creating order:", error);
+  //     navigate("/payment-failed");
+  //   }
+  // };
+
+  // const initPayment = (order, planId) => {
+  //   const options = {
+  //     key: "rzp_test_1XPSzkXhpRhsTx",
+  //     amount: order.amount,
+  //     currency: "INR",
+  //     name: "Membership Purchase",
+  //     description: "Test Transaction",
+  //     order_id: order.id,
+  //     handler: async (response) => {
+  //       try {
+  //         const verifyResponse = await axios.post(
+  //           "http://localhost:7001/membership/verify",
+  //           {
+  //             paymentId: response.razorpay_payment_id,
+  //             orderId: response.razorpay_order_id,
+  //           }
+  //         );
+
+  //         if (verifyResponse.data.success) {
+  //           console.log("Payment verified and membership updated");
+  //           navigate("/payment-success");
+  //         } else {
+  //           throw new Error("Payment verification failed.");
+  //         }
+  //       } catch (error) {
+  //         console.log("Payment verification error:", error);
+  //         navigate("/payment-failed");
+  //       }
+  //     },
+  //     theme: {
+  //       color: "#A1F65E",
+  //     },
+  //   };
+  //   const rzp1 = new window.Razorpay(options);
+  //   rzp1.open();
+  // };
   const initPayment = (data) => {
-    console.log("data", data);
     const options = {
       key: "rzp_test_1XPSzkXhpRhsTx",
       amount: data.amount,
       currency: data.currency,
       name: data.name,
       description: "Test Transaction",
+      image: data.img,
       order_id: data.id,
       handler: async (response) => {
         try {
@@ -117,6 +181,48 @@ function Home() {
     } catch (error) {
       console.error("Error", error);
     }
+  };
+
+  const updateMembershipDetails = async (planId) => {
+    try {
+      const expiryDate = new Date();
+      expiryDate.setMonth(expiryDate.getMonth() + 1); // Set expiry to one month from now
+
+      const response = await axios.post(
+        "/user/updateMembership",
+        {
+          userId: LoggedInUser?.user?._id,
+          planId: planId,
+          expiryDate: expiryDate.toISOString(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Membership updated successfully");
+        navigate("/payment-success");
+      } else {
+        throw new Error(
+          "Failed to update the membership due to an unexpected response status."
+        );
+      }
+    } catch (error) {
+      console.error("Failed to update membership details", error);
+      navigate("/payment-failed");
+    }
+  };
+
+  const membershipPlansRef = useRef(null);
+
+  const scrollToMembershipPlans = () => {
+    membershipPlansRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -168,7 +274,9 @@ function Home() {
               gap: "10px",
             }}
           >
-            <Box sx={ButtonStyle}>Start Today</Box>
+            <Box sx={ButtonStyle} onClick={scrollToMembershipPlans}>
+              Start Today
+            </Box>
             <Box sx={ButtonStyle} onClick={() => navigate("/about")}>
               About Us
             </Box>
@@ -701,9 +809,18 @@ function Home() {
             spacing={2}
             justifyContent='center'
             alignItems='center'
-            sx={{ paddingTop: "20px" }}
+            sx={{
+              paddingTop: "20px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              width: "80%",
+              mx: "auto",
+              textAlign: "center",
+            }}
           >
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <Grid container justifyContent='center' spacing={1}>
                 {Object.keys(schedules).map((day) => (
                   <Grid key={day} item>
@@ -717,15 +834,37 @@ function Home() {
                   </Grid>
                 ))}
               </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              {schedules[activeDay]}
+            </Grid> */}
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "80%",
+                mx: "auto",
+                height: "100%",
+              }}
+            >
+              {/* {schedules[activeDay]} */}
+              <Typography
+                sx={{
+                  fontFamily: "poppins",
+                  fontSize: "100px",
+                  fontWeight: 800,
+                  color: "#FBFFFE",
+                }}
+              >
+                We will be launching the schedule soon.
+              </Typography>
             </Grid>
           </Grid>
         </Box>
 
         <Box
           container
+          ref={membershipPlansRef}
           sx={{
             width: "80%",
             mx: "auto",
@@ -798,26 +937,10 @@ function Home() {
           sx={{
             width: "80%",
             mx: "auto",
+            pb: "50px",
           }}
         >
           {allMemberships?.map((x, y) => {
-            // const currentUserPlan = getCurrentUserPlan();
-
-            // // Logic to determine which icon to use based on the plan
-            // const getPlanIcon = (planName) => {
-            //   switch (planName) {
-            //     case "Standard":
-            //       return StandardPlanIcon;
-            //     case "Premium":
-            //       return PremiumPlanIcon;
-            //     default:
-            //       return BasicPlanIcon;
-            //   }
-            // };
-
-            // // Determine if the plan being rendered matches the current user's plan
-            // const isCurrentUserPlan = plan.PlanName === currentUserPlan;
-
             return (
               <Grid
                 item
@@ -981,7 +1104,7 @@ function Home() {
                         LoggedInUser?.user?.membershipPlanDetails?.PlanName !==
                         x?.PlanName
                       ) {
-                        handleMembershipPayment(x?.PlanPrice);
+                        handleMembershipPayment(x.PlanPrice, x._id);
                       }
                     }}
                   >
@@ -995,7 +1118,7 @@ function Home() {
                     >
                       {LoggedInUser?.user?.membershipPlanDetails?.PlanName ===
                       x?.PlanName
-                        ? "Current Plan"
+                        ? "Active Plan"
                         : "Get Started"}
                     </Typography>
                   </Box>

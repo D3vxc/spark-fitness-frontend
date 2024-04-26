@@ -19,17 +19,23 @@ export const useFetchCart = () => {
   return { data, error, isLoading, refetch };
 };
 
-export const useAddToCart = () => {
+export const useAddToCart = (productId, quantity) => {
   const { data, error, isLoading, refetch } = useQuery(
     "addToCart",
     async () => {
       try {
-        const response = await axios.post("cart/addToCart", {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
+        const response = await axios.post(
+          "cart/addToCart",
+          {
+            productId,
+            quantity,
           },
-        });
-        // console.log(response.data, "response data here");
+          {
+            headers: {
+              Authorization: `Bearer ${getToken()}`,
+            },
+          }
+        );
         return response.data;
       } catch (error) {
         throw new Error("Error fetching cart data: " + error.message);

@@ -19,6 +19,9 @@ import ProductsComponent from "../../AdminComponents/ProductsComponent.jsx";
 import ClassesComponent from "../../AdminComponents/ClassesComponent.jsx";
 import Dashboard from "../../AdminComponents/DashboardComponent.jsx";
 import Cart from "../Pages/Cart.jsx";
+import BMI from "../Pages/BMI.jsx";
+import PaymentSuccess from "../components/PaymentSuccess.jsx";
+import PaymentFailed from "../components/PaymentFailed.jsx";
 
 const HeaderFooterLayout = ({ children }) => (
   <div>
@@ -44,6 +47,8 @@ const MainRouter = () => (
       <Route path='/admin/classes' element={<ClassesComponent />} />
 
       <Route path='/addProduct' element={<AddProduct />} />
+      <Route path='/payment-success' element={<PaymentSuccess />} />
+      <Route path='/payment-failed' element={<PaymentFailed />} />
       <Route
         path='/'
         element={
@@ -87,8 +92,16 @@ const MainRouter = () => (
       <Route
         path='/cart'
         element={
+          // <HeaderFooterLayout>
+          <Cart />
+          // </HeaderFooterLayout>
+        }
+      />
+      <Route
+        path='/bmi'
+        element={
           <HeaderFooterLayout>
-            <Cart />
+            <BMI />
           </HeaderFooterLayout>
         }
       />

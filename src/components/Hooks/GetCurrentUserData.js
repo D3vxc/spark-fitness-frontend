@@ -22,3 +22,23 @@ export const FetchUser = () => {
 
   return { data, error, isLoading, refetch };
 };
+
+export const Logout = () => {
+  const mutation = useMutation(async () => {
+    try {
+      const response = await axios.post("user/logout", null, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      // console.log("response.data", response.data);
+      return response.data;
+    } catch (error) {
+      // It's good practice to log the error or handle it appropriately
+      console.error("Error logging out:", error);
+      throw new Error("Error logging out: " + error.message);
+    }
+  });
+
+  return mutation;
+};
