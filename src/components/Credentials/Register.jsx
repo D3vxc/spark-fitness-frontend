@@ -38,16 +38,14 @@ export default function SignUp() {
     const email = data.get("email");
     const password = data.get("password");
 
-    // Construct multiple addresses; here we just handle one for the example
-    const addresses = [
-      {
-        street: data.get("street"),
-        city: data.get("city"),
-        state: data.get("state"),
-        postalCode: data.get("postalCode"),
-        country: data.get("country"),
-      },
-    ];
+    // Construct address object
+    const address = {
+      street: data.get("street"),
+      city: data.get("city"),
+      state: data.get("state"),
+      postalCode: data.get("postalCode"),
+      country: data.get("country"),
+    };
 
     // Assume a simple validation that all fields are filled
     if (
@@ -55,9 +53,11 @@ export default function SignUp() {
       phone &&
       email &&
       password &&
-      addresses.every((address) =>
-        Object.values(address).every((value) => value)
-      )
+      address.street &&
+      address.city &&
+      address.state &&
+      address.postalCode &&
+      address.country
     ) {
       try {
         await axios.post("/user/register", {
@@ -65,7 +65,7 @@ export default function SignUp() {
           phone,
           email,
           password,
-          addresses,
+          address,
         });
         toast.success("Registration successful!");
         navigate("/login");

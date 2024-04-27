@@ -43,7 +43,7 @@ const About = () => {
             height: "400px",
           }}
         />
-        <Box>ewfewfj</Box>
+        {/* <Box>ewfewfj</Box> */}
       </Box>
     </React.Fragment>
   );

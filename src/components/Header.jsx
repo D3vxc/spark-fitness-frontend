@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Typography, Modal } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LogoImage from "../assets/HomePageImages/Logo.svg";
 import { useNavigate } from "react-router-dom";
 import { FetchUser, Logout } from "./Hooks/GetCurrentUserData";
@@ -11,6 +11,7 @@ import BasicPlanIcon from "../assets/HomePageImages/BasicPlanIcon.svg";
 import StandardPlanIcon from "../assets/HomePageImages/StandardPlanIcon.svg";
 import PremiumPlanIcon from "../assets/HomePageImages/PremiumPlanIcon.svg";
 import CartPopUp from "../components/Pages/CartPopUp";
+import Cookies from "js-cookie";
 
 function Header(props) {
   const navigate = useNavigate();
@@ -52,8 +53,10 @@ function Header(props) {
     try {
       await LogoutRefetch();
       toast.success("Logged out successfully");
-      // cookie.remove("token");
+      Cookies.remove("token");
+      // Remove the token from local storage
       localStorage.removeItem("token");
+
       LoggedInUserRefetch();
       navigate("/");
     } catch (error) {
@@ -363,7 +366,10 @@ function Header(props) {
               <Typography
                 id='modal-modal-description'
                 sx={{ mt: 2, textDecoration: "underline", cursor: "pointer" }}
-                onClick={handleLogout}
+                onClick={() => {
+                  Cookies.remove("token");
+                  navigate("/");
+                }}
               >
                 Logout
               </Typography>
