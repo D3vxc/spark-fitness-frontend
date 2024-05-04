@@ -1,23 +1,43 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Typography, Grid, Paper, Box } from "@mui/material";
+import { Doughnut, Line } from "react-chartjs-2";
 import {
-  PieChart,
-  Pie,
-  Cell,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
   Tooltip,
   Legend,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from "recharts";
+  ArcElement,
+  DoughnutController,
+  LineElement,
+  PointElement,
+} from "chart.js";
+import { useFetchAllUsers } from "../components/Hooks/GetAllUsers";
+import { useFetchAllClasses } from "../components/Hooks/getAllClasses";
+import { useFetchAllProduct } from "../components/Hooks/getAllproduct";
 
-// Mock data for the charts
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  DoughnutController,
+  LineElement,
+  PointElement
+);
+
+// The colors for the doughnut chart
+const doughnutColors = ["#FF6384", "#36A2EB", "#FFCE56", "#FF6384", "#36A2EB"];
+
+// Mock data for the Doughnut and Line charts
 const roleData = [
   { name: "Total Classes", value: 11 },
   { name: "All User", value: 88 },
-  { name: "Guest", value: 33 },
   { name: "Product", value: 16 },
   { name: "Admin", value: 2 },
 ];
@@ -30,27 +50,132 @@ const productSalesData = [
   { name: "May", sales: 4800 },
   { name: "Jun", sales: 3800 },
   { name: "Jul", sales: 4300 },
-  { name: "Aug", sales: 2400 },
-  { name: "Sep", sales: 1398 },
-  { name: "Oct", sales: 9800 },
-  { name: "Nov", sales: 3908 },
-  { name: "Dec", sales: 4800 },
-  // Add more months as needed
+  // ... include all other months as needed
 ];
 
-// Colors for the PieChart
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red"];
+// Doughnut chart data and options
+const doughnutData = {
+  labels: roleData.map((item) => item.name),
+  datasets: [
+    {
+      data: roleData.map((item) => item.value),
+      backgroundColor: doughnutColors,
+      hoverBackgroundColor: doughnutColors,
+    },
+  ],
+};
+
+const doughnutOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+};
+
+// Line chart data and options
+// const lineData = {
+//   labels: productSalesData.map((item) => item.name),
+//   datasets: [
+//     {
+//       label: "Dataset 1",
+//       data: productSalesData.map((item) => item.sales),
+//       fill: false,
+//       borderColor: "red",
+//     },
+//     {
+//       label: "Dataset 2",
+//       data: productSalesData.map((item) => item.sales + 20), // example for second dataset
+//       fill: false,
+//       borderColor: "blue",
+//     },
+//   ],
+// };
+
+const lineOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+};
 
 function DashboardComponent() {
+  const {
+    data: getAllUsers,
+    isLoading: getusersLoading,
+    refetch: refetchUsers,
+  } = useFetchAllUsers();
+
+  const {
+    data: allClasses,
+    isLoading: classesLoading,
+    refetch: refetchClasses,
+  } = useFetchAllClasses();
+
+  const {
+    data: getAllProduct,
+    isLoading: getproductLoading,
+    error: getproductError,
+    refetch: refetchProduct,
+  } = useFetchAllProduct();
+
+  console.log(getAllProduct);
+
+  const doughnutData = useMemo(() => {
+    const dataValues = [
+      allClasses?.length || 0, // Replace with actual count if available
+      getAllUsers?.length || 0, // Replace with actual count if available
+      getAllProduct?.length || 0, // Replace with actual count if available
+      // Add other data if needed
+    ];
+
+    return {
+      labels: ["Total Classes", "All User", "Product"], // Add more labels if needed
+      datasets: [
+        {
+          data: dataValues,
+          backgroundColor: doughnutColors,
+          hoverBackgroundColor: doughnutColors,
+        },
+      ],
+    };
+  }, [allClasses, getAllUsers, getAllProduct]);
+
+  const lineData = useMemo(() => {
+    const dataValues = [
+      getAllUsers?.length || 0, // Replace with actual count if available
+      getAllProduct?.length || 0, // Replace with actual count if available
+    ];
+    return {
+      labels: ["All User", "Product"], // Add more labels if needed
+      datasets: [
+        {
+          label: "Users",
+          data: dataValues,
+          fill: false,
+          borderColor: "green",
+        },
+        {
+          label: "Product",
+          data: dataValues,
+          fill: false,
+          borderColor: "blue",
+        },
+      ],
+    };
+  }, [, getAllUsers, getAllProduct]);
+
   return (
     <React.Fragment>
       <Box sx={{ flexGrow: 1, p: 6, bgcolor: "#FBFFFE", height: "100vh" }}>
-        <Typography variant='h4'  component="div">
+        <Typography variant='h4' component='div'>
           Dashboard Overview
         </Typography>
         <Grid container spacing={10}>
-          {/* PieChart for User Roles */}
-          <Grid item xs={12} sm={6} >
+          {/* Doughnut chart for Role Distribution */}
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{
+              height: "600px",
+            }}
+          >
             <Paper
               sx={{
                 p: 2,
@@ -58,44 +183,24 @@ function DashboardComponent() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                height: "100%",
               }}
             >
               <Typography variant='h6' component='h2'>
                 Role Distribution
               </Typography>
-              <PieChart width={400} height={450}>
-                {" "}
-                {/* Increased height to 600 */}
-                <Pie
-                  data={roleData}
-                  cx='50%'
-                  cy='50%'
-                  labelLine={false}
-                  outerRadius={60}
-                  fill='#8884d8'
-                  dataKey='value'
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 150).toFixed(0)}%`
-                  }
-                  sx={{
-                    height: "300px", // This style might not be necessary for adjusting the chart's height
-                  }}
-                >
-                  {roleData.map((entry, index) => (
-                    <Cell
-                      sx={{}}
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
+              <Doughnut data={doughnutData} options={doughnutOptions} />
             </Paper>
           </Grid>
-          {/* BarChart for Product Sales */}
-          <Grid item xs={12} sm={6} >
+          {/* Line chart for Monthly Product Sales */}
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{
+              height: "600px",
+            }}
+          >
             <Paper
               sx={{
                 p: 2,
@@ -103,29 +208,13 @@ function DashboardComponent() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                height: "100%",
               }}
             >
               <Typography variant='h6' component='h2'>
                 Monthly Product Sales
               </Typography>
-              <BarChart
-                width={500}
-                height={350}
-                data={productSalesData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray='3 3' />
-                <XAxis dataKey='name' />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey='sales' fill='#8884d8' />
-              </BarChart>
+              <Line data={lineData} options={lineOptions} />
             </Paper>
           </Grid>
         </Grid>

@@ -216,7 +216,10 @@ function Header(props) {
               onClick={handleProfileOpen}
             />
             <ShoppingCartOutlinedIcon
-              sx={{ fontSize: 40, cursor: "pointer" }}
+              sx={{
+                fontSize: 40,
+                cursor: "pointer",
+              }}
               onClick={handleCartOpen}
             />
           </Grid>
@@ -368,7 +371,8 @@ function Header(props) {
                 sx={{ mt: 2, textDecoration: "underline", cursor: "pointer" }}
                 onClick={() => {
                   Cookies.remove("token");
-                  navigate("/");
+                  handleCartClose();
+                  navigate("/login");
                 }}
               >
                 Logout
