@@ -8,6 +8,7 @@ import { useUpdateCart, useRemoveFromCart } from "../Hooks/CartActions";
 import { FetchUser } from "../Hooks/GetCurrentUserData";
 import { useFetchAllProduct } from "../Hooks/getAllproduct";
 import rightArrow from "../../assets/HeaderComponentImages/rightArrow.svg";
+import { getToken } from "../../utils/token";
 
 function CartPopUp(props) {
   const navigate = useNavigate();
@@ -80,8 +81,17 @@ function CartPopUp(props) {
     });
   };
 
-  const handleRemoveItem = (productId) => {
-    deleteCartItem(productId);
+  const handleRemoveItem = async (productId) => {
+    const userId = LoggedInUser?.user?._id;
+
+    const token = getToken();
+
+    try {
+      await deleteCartItem({ userId, productId, token });
+    } catch (error) {
+      // Handle error
+      console.error("Error removing item from cart:", error);
+    }
   };
 
   const initPayment = (data) => {
@@ -124,6 +134,12 @@ function CartPopUp(props) {
       console.error("Error", error);
     }
   };
+
+  useEffect(() => {
+    refetchCart();
+    refetchProduct();
+    LoggedInUserRefetch();
+  }, [cartData?.productData, getAllProduct, LoggedInUser?.user?._id]);
 
   return (
     <React.Fragment>

@@ -14,6 +14,7 @@ import PremiumPlanIcon from "../../assets/HomePageImages/PremiumPlanIcon.svg";
 import { useFetchAllMembership } from "../Hooks/getMembershipdetails";
 import axios from "axios";
 import { FetchUser } from "../Hooks/GetCurrentUserData";
+import ScheduleTimeTable from "../../assets/HomePageImages/Table.svg";
 
 function Home() {
   const navigate = useNavigate();
@@ -775,7 +776,7 @@ function Home() {
 
         <Box
           sx={{
-            height: "100vh",
+            height: "110vh",
             background: "#1D2229",
             color: "#FFF", // Ensuring text color is visible against the dark background
           }}
@@ -810,7 +811,7 @@ function Home() {
             justifyContent='center'
             alignItems='center'
             sx={{
-              paddingTop: "20px",
+              // paddingTop: "20px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -848,7 +849,7 @@ function Home() {
               }}
             >
               {/* {schedules[activeDay]} */}
-              <Typography
+              {/* <Typography
                 sx={{
                   fontFamily: "poppins",
                   fontSize: "100px",
@@ -857,7 +858,15 @@ function Home() {
                 }}
               >
                 We will be launching the schedule soon.
-              </Typography>
+              </Typography> */}
+              <Box
+                component='img'
+                src={ScheduleTimeTable}
+                sx={{
+                  width: "90%",
+                  height: "80%",
+                }}
+              />
             </Grid>
           </Grid>
         </Box>

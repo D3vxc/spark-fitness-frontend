@@ -28,13 +28,36 @@ export const useUpdateCart = () => {
   return updateCart;
 };
 
+// export const useRemoveFromCart = () => {
+//   const queryClient = useQueryClient();
+
+//   const removeItem = useMutation(
+//     async (productId) => {
+//       const response = await axios.delete("/cart/removeFromCart", {
+//         data: { productId },
+//         headers: {
+//           Authorization: `Bearer ${getToken()}`,
+//         },
+//       });
+//       return response.data;
+//     },
+//     {
+//       onSuccess: () => {
+//         queryClient.invalidateQueries("Cart");
+//       },
+//     }
+//   );
+
+//   return removeItem;
+// };
+
 export const useRemoveFromCart = () => {
   const queryClient = useQueryClient();
 
   const removeItem = useMutation(
-    async (productId) => {
+    async ({ userId, productId }) => {
       const response = await axios.delete("/cart/removeFromCart", {
-        data: { productId },
+        data: { userId, productId },
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
