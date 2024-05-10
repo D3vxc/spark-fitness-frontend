@@ -50,22 +50,29 @@ export const useUpdateCart = () => {
 
 //   return removeItem;
 // };
-
 export const useRemoveFromCart = () => {
   const queryClient = useQueryClient();
 
   const removeItem = useMutation(
-    async ({ userId, productId }) => {
-      const response = await axios.delete("/cart/removeFromCart", {
-        data: { userId, productId },
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      return response.data;
+    async ({ userId, productId, token }) => {
+      try {
+        const response = await axios.delete("/cart/removeFromCart", {
+          data: { userId, productId },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response.data;
+      } catch (error) {
+        throw new Error(
+          error.response.data.message ||
+            "An error occurred while removing item from cart"
+        );
+      }
     },
     {
       onSuccess: () => {
+        // Refetch cart data after successful removal
         queryClient.invalidateQueries("Cart");
       },
     }

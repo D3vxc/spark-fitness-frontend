@@ -9,6 +9,7 @@ import { FetchUser } from "../Hooks/GetCurrentUserData";
 import { useFetchAllProduct } from "../Hooks/getAllproduct";
 import rightArrow from "../../assets/HeaderComponentImages/rightArrow.svg";
 import { getToken } from "../../utils/token";
+import { toast } from "react-toastify";
 
 function CartPopUp(props) {
   const navigate = useNavigate();
@@ -83,14 +84,16 @@ function CartPopUp(props) {
 
   const handleRemoveItem = async (productId) => {
     const userId = LoggedInUser?.user?._id;
-
     const token = getToken();
 
     try {
       await deleteCartItem({ userId, productId, token });
+      // Show toaster notification
+      toast.success("Product removed from cart", { autoClose: 2000 });
     } catch (error) {
       // Handle error
       console.error("Error removing item from cart:", error);
+      toast.error("Error removing product from cart");
     }
   };
 
@@ -136,10 +139,13 @@ function CartPopUp(props) {
   };
 
   useEffect(() => {
-    refetchCart();
     refetchProduct();
-    LoggedInUserRefetch();
-  }, [cartData?.productData, getAllProduct, LoggedInUser?.user?._id]);
+  }, [getAllProduct]);
+  useEffect(() => {
+    if (cartData?.productData) {
+      refetchCart();
+    }
+  }, [cartData?.productData]);
 
   return (
     <React.Fragment>
